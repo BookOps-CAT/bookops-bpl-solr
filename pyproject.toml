@@ -1,0 +1,48 @@
+[tool.poetry]
+name = "bookops-bpl-solr"
+version = "0.1.0"
+description = "BookOps Python wrapper around BPL Solr service."
+license = "MIT"
+authors = ["Tomasz Kalata <klingaroo@gmail.com>"]
+readme = "README.md"
+
+keywords = ["api", "cataloging", "bibliographic records", "library metadata", "bpl"]
+
+[tool.poetry.dependencies]
+python = "^3.8"
+requests = "^2.24.0"
+
+[tool.poetry.dev-dependencies]
+pytest = "^6.1.1"
+pytest-mock = "^3.3.1"
+pytest-cov = "^2.10.1"
+mkdocs = "^1.1.2"
+mike = "^0.5.3"
+mkapi = "^1.0.13"
+black = "^20.8b1"
+
+[tool.black]
+line-length = 88
+target-version = ['py38']
+include = '\.pyi?$'
+exclude = '''
+(
+    /(
+        \.eggs
+       | \.git
+       | \.hg
+       | \.mypy_cache
+       | \.tox
+       | \.venv
+       | _build
+       | buck-out
+       | build
+       | dist
+    )/
+    | temp.py
+)
+'''
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
