@@ -17,3 +17,6 @@ Requires Python 3.7 & up.
 ## Changelog
 
 ## References
+
++ [Apache Solr Reference Guide](https://lucene.apache.org/solr/guide/8_6/)
++ [pysolr](https://pypi.org/project/pysolr/)
