@@ -23,18 +23,18 @@ class TestSolrSession:
     def test_init_argument_authorization_exception(self, arg):
         err_msg = "Invalid authorization. Argument must be a Client-Key string."
         with pytest.raises(BplSolrError) as exc:
-            SolrSession(authorization=arg, base_url="example.com")
+            SolrSession(authorization=arg, endpoint="example.com")
             assert err_msg in str(exc.value)
 
-    def test_init_base_url_param(self):
+    def test_init_endpoint_param(self):
         session = SolrSession("my_client_key", "example.com")
-        assert session.base_url == "example.com"
+        assert session.endpoint == "example.com"
 
     @pytest.mark.parametrize("arg", [None, "", 123])
-    def test_init_argument_base_url_exceptions(self, arg):
-        err_msg = "Invalid base_url argument. It must be a Client-Key string."
+    def test_init_argument_endpoint_exceptions(self, arg):
+        err_msg = "Invalid endpoint argument. It must be a Client-Key string."
         with pytest.raises(BplSolrError) as exc:
-            SolrSession(authorization="my_client_key", base_url=arg)
+            SolrSession(authorization="my_client_key", endpoint=arg)
             assert err_msg in str(exc.value)
 
     @pytest.mark.parametrize("arg", [None, "", [], {}])
@@ -52,3 +52,69 @@ class TestSolrSession:
         with pytest.raises(BplSolrError) as exc:
             SolrSession("my_client_key", "example.com", agent=arg)
             assert err_msg in str(exc.value)
+
+    def test_authorization_in_header(self):
+        session = SolrSession("my_client_key", "example.com")
+        assert session.headers["Client-Key"] == "my_client_key"
+
+    @pytest.mark.parametrize(
+        "arg,expectation",
+        [
+            (
+                {},
+                {
+                    "rows": 5,
+                    "fq": "ss_type:catalog",
+                    "fl": "id,title,author_raw,publishYear,material_type,call_number,isbn,language,econtrolnumber,eurl,created_date",
+                },
+            ),
+            (
+                {"rows": 10, "q": "isbn:isbn_here", "fl": "id,title,author_raw"},
+                {
+                    "q": "isbn:isbn_here",
+                    "rows": 10,
+                    "fq": "ss_type:catalog",
+                    "fl": "id,title,author_raw",
+                },
+            ),
+        ],
+    )
+    def test_merge_payload_with_defaults(self, arg, expectation):
+        session = SolrSession("my_client_key", "example.com")
+        assert session._merge_with_payload_defaults(arg) == expectation
+
+    @pytest.mark.parametrize("arg", [({}, None, "some_str")])
+    def test_send_request_payload_errors(self, arg):
+        err_msg = "Missing or invalid payload argument."
+        session = SolrSession("my_client_key", "example.com")
+        with pytest.raises(BplSolrError) as exc:
+            session._send_request(arg)
+            assert err_msg in str(exc.value)
+
+    def test_send_request_success(self, mock_successful_session_get_response):
+        with SolrSession(
+            authorization="my_client_key", endpoint="example.com"
+        ) as session:
+            response = session._send_request({"q": "zendegi"})
+            assert response.status_code == 200
+
+    def test_send_request_timeout_error(self, mock_timeout):
+        with pytest.raises(BplSolrError):
+            with SolrSession(
+                authorization="my_client_key", endpoint="example.com"
+            ) as session:
+                session._send_request({"q": "zendegi"})
+
+    def test_send_request_connection_error(self, mock_connectionerror):
+        with pytest.raises(BplSolrError):
+            with SolrSession(
+                authorization="my_client_key", endpoint="example.com"
+            ) as session:
+                session._send_request({"q": "zendegi"})
+
+    def test_send_request_unexpected_error(self, mock_unexpected_error):
+        with pytest.raises(BplSolrError):
+            with SolrSession(
+                authorization="my_client_key", endpoint="example.com"
+            ) as session:
+                session._send_request({"q": "zendegi"})
