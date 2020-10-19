@@ -90,7 +90,7 @@ class SolrSession(requests.Session):
         err_msg = "Invalid Sierra bib number passed."
 
         if type(bid) is int:
-            bid = str(bid)
+            bid = str(bid).strip()
 
         if "b" == bid.lower()[0]:
             bid = bid[1:]
@@ -152,8 +152,27 @@ class SolrSession(requests.Session):
     def search_bibNo(self, keyword: Union[str, int]) -> Type[requests.Response]:
         """
         Retrieves documents with matching id (Sierra bib #)
+
+        Args:
+            keyword:                Sierra bib number
+
+        Returns:
+            `requests.Response` object
         """
-        pass
+        if not keyword:
+            raise BookopsSolrError("Missing keyword argument.")
+
+        # verify and prep bib number
+        keyword = self._prep_sierra_number(keyword)
+
+        payload = {
+            "id": keyword,
+            "fl": "id,title,author_raw,publishYear,created_date,material_type,call_number,isbn,language,eprovider,econtrolnumber,eurl,digital_avail_type,digital_copies_owned",
+        }
+
+        response = self._send_request(payload)
+
+        return response
 
     def search_isbns(self, keywords: List[str]) -> Type[requests.Response]:
         """

@@ -135,10 +135,52 @@ class TestSolrSession:
         ) as session:
             assert session._prep_sierra_number(arg) == expectation
 
-    @pytest.mark.parametrize("arg", ["bt12345678", "o12345678", "123456", "1234567890"])
+    @pytest.mark.parametrize(
+        "arg", ["bt12345678", "o12345678", "123456", "1234567890", 12345, "wlo12345"]
+    )
     def test_prep_sierra_number_exceptions(self, arg):
+        err_msg = "Invalid Sierra bib number passed."
+        with SolrSession(
+            authorization="my_client_key", endpoint="example.com"
+        ) as session:
+            with pytest.raises(BookopsSolrError) as exc:
+                session._prep_sierra_number(arg)
+                assert err_msg in str(exc.value)
+
+    def test_search_bibNo_success(self, mock_successful_session_get_response):
+        with SolrSession(
+            authorization="my_client_key", endpoint="example.com"
+        ) as session:
+            response = session.search_bibNo("b123456789")
+            assert response.status_code == 200
+
+    @pytest.mark.parametrize("arg", [None, ""])
+    def test_search_bibNo_empty_keyword(self, arg):
+        err_msg = "Missing keyword argument."
+        with SolrSession(
+            authorization="my_client_key", endpoint="example.com"
+        ) as session:
+            with pytest.raises(BookopsSolrError) as exc:
+                session.search_bibNo(arg)
+                assert err_msg in str(exc.value)
+
+    def test_search_bibNo_timeout(self, mock_timeout):
         with SolrSession(
             authorization="my_client_key", endpoint="example.com"
         ) as session:
             with pytest.raises(BookopsSolrError):
-                session._prep_sierra_number(arg)
+                session.search_bibNo("b123456789")
+
+    def test_search_bibNo_connection_error(self, mock_connectionerror):
+        with SolrSession(
+            authorization="my_client_key", endpoint="example.com"
+        ) as session:
+            with pytest.raises(BookopsSolrError):
+                session.search_bibNo("b123456789")
+
+    def test_search_bibNo_unexpected_error(self, mock_unexpected_error):
+        with SolrSession(
+            authorization="my_client_key", endpoint="example.com"
+        ) as session:
+            with pytest.raises(BookopsSolrError):
+                session.search_bibNo("b123456789")
