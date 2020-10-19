@@ -50,7 +50,6 @@ def mock_successful_session_get_response(monkeypatch):
 @pytest.fixture
 def default_payload():
     return {
-        "rows": 5,
+        "rows": 10,
         "fq": "ss_type:catalog",
-        "fl": "id,title,author_raw,publishYear,material_type,call_number,isbn,language,econtrolnumber,eurl,created_date",
     }

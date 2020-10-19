@@ -6,7 +6,7 @@ Tests session.py module
 
 import pytest
 
-from bookops_bpl_solr.session import SolrSession, BplSolrError
+from bookops_bpl_solr.session import SolrSession, BookopsSolrError
 from bookops_bpl_solr import __title__, __version__
 
 
@@ -22,7 +22,7 @@ class TestSolrSession:
     @pytest.mark.parametrize("arg", [None, "", 123])
     def test_init_argument_authorization_exception(self, arg):
         err_msg = "Invalid authorization. Argument must be a Client-Key string."
-        with pytest.raises(BplSolrError) as exc:
+        with pytest.raises(BookopsSolrError) as exc:
             SolrSession(authorization=arg, endpoint="example.com")
             assert err_msg in str(exc.value)
 
@@ -33,7 +33,7 @@ class TestSolrSession:
     @pytest.mark.parametrize("arg", [None, "", 123])
     def test_init_argument_endpoint_exceptions(self, arg):
         err_msg = "Invalid endpoint argument. It must be a Client-Key string."
-        with pytest.raises(BplSolrError) as exc:
+        with pytest.raises(BookopsSolrError) as exc:
             SolrSession(authorization="my_client_key", endpoint=arg)
             assert err_msg in str(exc.value)
 
@@ -49,7 +49,7 @@ class TestSolrSession:
     @pytest.mark.parametrize("arg", [123, {"a": 1}])
     def test_init_agent_argument_exceptions(self, arg):
         err_msg = "Invalid type of an agent argument."
-        with pytest.raises(BplSolrError) as exc:
+        with pytest.raises(BookopsSolrError) as exc:
             SolrSession("my_client_key", "example.com", agent=arg)
             assert err_msg in str(exc.value)
 
@@ -63,9 +63,8 @@ class TestSolrSession:
             (
                 {},
                 {
-                    "rows": 5,
+                    "rows": 10,
                     "fq": "ss_type:catalog",
-                    "fl": "id,title,author_raw,publishYear,material_type,call_number,isbn,language,econtrolnumber,eurl,created_date",
                 },
             ),
             (
@@ -87,7 +86,7 @@ class TestSolrSession:
     def test_send_request_payload_errors(self, arg):
         err_msg = "Missing or invalid payload argument."
         session = SolrSession("my_client_key", "example.com")
-        with pytest.raises(BplSolrError) as exc:
+        with pytest.raises(BookopsSolrError) as exc:
             session._send_request(arg)
             assert err_msg in str(exc.value)
 
@@ -99,21 +98,21 @@ class TestSolrSession:
             assert response.status_code == 200
 
     def test_send_request_timeout_error(self, mock_timeout):
-        with pytest.raises(BplSolrError):
+        with pytest.raises(BookopsSolrError):
             with SolrSession(
                 authorization="my_client_key", endpoint="example.com"
             ) as session:
                 session._send_request({"q": "zendegi"})
 
     def test_send_request_connection_error(self, mock_connectionerror):
-        with pytest.raises(BplSolrError):
+        with pytest.raises(BookopsSolrError):
             with SolrSession(
                 authorization="my_client_key", endpoint="example.com"
             ) as session:
                 session._send_request({"q": "zendegi"})
 
     def test_send_request_unexpected_error(self, mock_unexpected_error):
-        with pytest.raises(BplSolrError):
+        with pytest.raises(BookopsSolrError):
             with SolrSession(
                 authorization="my_client_key", endpoint="example.com"
             ) as session:
