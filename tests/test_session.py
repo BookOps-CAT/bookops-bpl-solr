@@ -117,3 +117,28 @@ class TestSolrSession:
                 authorization="my_client_key", endpoint="example.com"
             ) as session:
                 session._send_request({"q": "zendegi"})
+
+    @pytest.mark.parametrize(
+        "arg,expectation",
+        [
+            ("b123456789", "12345678"),
+            ("b12345678a", "12345678"),
+            (123456789, "12345678"),
+            ("123456789", "12345678"),
+            ("12345678a", "12345678"),
+            ("12345678", "12345678"),
+        ],
+    )
+    def test_prep_sierra_number(self, arg, expectation):
+        with SolrSession(
+            authorization="my_client_key", endpoint="example.com"
+        ) as session:
+            assert session._prep_sierra_number(arg) == expectation
+
+    @pytest.mark.parametrize("arg", ["bt12345678", "o12345678", "123456", "1234567890"])
+    def test_prep_sierra_number_exceptions(self, arg):
+        with SolrSession(
+            authorization="my_client_key", endpoint="example.com"
+        ) as session:
+            with pytest.raises(BookopsSolrError):
+                session._prep_sierra_number(arg)
