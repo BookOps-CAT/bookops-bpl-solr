@@ -192,10 +192,7 @@ class TestSolrSessionLiveService:
     Runs tests against web endpoint of the BPL Solr platform
     """
 
-    def test_response_print_schema(self, live_key):
-        """
-        Test if any changes to schema were introduce to the service
-        """
+    def test_send_custom_request(self, live_key):
         with SolrSession(
             authorization=live_key.client_key, endpoint=live_key.endpoint
         ) as session:
@@ -211,3 +208,16 @@ class TestSolrSessionLiveService:
                 response.url
                 == "https://www.bklynlibrary.org/solr/api/select/?rows=2&fq=material_type%3ABook&q=title%3Acivil+AND+war"
             )
+
+    def test_search_bibNo(self, live_key):
+        with SolrSession(
+            authorization=live_key.client_key, endpoint=live_key.endpoint
+        ) as session:
+            response = session.search_bibNo("b10000017a")
+            assert response.status_code == 200
+            assert (
+                response.url
+                == "https://www.bklynlibrary.org/solr/api/select/?rows=10&fq=ss_type%3Acatalog&q=id%3A10000017&fl=id%2Ctitle%2Cauthor_raw%2CpublishYear%2Ccreated_date%2Cmaterial_type%2Ccall_number%2Cisbn%2Clanguage%2Ceprovider%2Cecontrolnumber%2Ceurl%2Cdigital_avail_type%2Cdigital_copies_owned"
+            )
+            assert response.json()["response"]["numFound"] == 1
+            assert response.json()["response"]["docs"][0]["id"] == "10000017"

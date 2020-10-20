@@ -166,7 +166,7 @@ class SolrSession(requests.Session):
         keyword = self._prep_sierra_number(keyword)
 
         payload = {
-            "id": keyword,
+            "q": f"id:{keyword}",
             "fl": "id,title,author_raw,publishYear,created_date,material_type,call_number,isbn,language,eprovider,econtrolnumber,eurl,digital_avail_type,digital_copies_owned",
         }
 
