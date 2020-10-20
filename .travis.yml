@@ -12,6 +12,6 @@ install:
 
 # command to run tests
 script:
-  - pytest --cov=bookops_bpl_solr/
+  - pytest -m "not webtest" --cov=bookops_bpl_solr/
 after_success:
   - coveralls
