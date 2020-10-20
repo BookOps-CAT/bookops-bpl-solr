@@ -53,3 +53,22 @@ def default_payload():
         "rows": 10,
         "fq": "ss_type:catalog",
     }
+
+
+@pytest.fixture
+def live_key():
+    """
+    runs only locally ; since the service have IP restrictions it most likely
+    won't run on Travis
+    """
+    import os
+    import json
+    from collections import namedtuple
+
+    if os.name == "nt":
+
+        Cred = namedtuple("Cred", ["endpoint", "client_key"])
+        fh = os.path.join(os.environ["USERPROFILE"], ".bpl-solr/bpl-solr-prod.json")
+        with open(fh, "r") as file:
+            cred = json.load(file)
+            return Cred(cred["endpoint"], cred["client_key"])

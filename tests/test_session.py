@@ -184,3 +184,30 @@ class TestSolrSession:
         ) as session:
             with pytest.raises(BookopsSolrError):
                 session.search_bibNo("b123456789")
+
+
+@pytest.mark.webtest
+class TestSolrSessionLiveService:
+    """
+    Runs tests against web endpoint of the BPL Solr platform
+    """
+
+    def test_response_print_schema(self, live_key):
+        """
+        Test if any changes to schema were introduce to the service
+        """
+        with SolrSession(
+            authorization=live_key.client_key, endpoint=live_key.endpoint
+        ) as session:
+            payload = {
+                "q": "title:civil AND war",
+                "fq": "ss_type:catalog",
+                "fq": "material_type:Book",
+                "rows": 2,
+            }
+            response = session._send_request(payload)
+            assert response.status_code == 200
+            assert (
+                response.url
+                == "https://www.bklynlibrary.org/solr/api/select/?rows=2&fq=material_type%3ABook&q=title%3Acivil+AND+war"
+            )
