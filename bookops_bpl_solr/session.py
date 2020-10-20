@@ -208,7 +208,30 @@ class SolrSession(requests.Session):
         return response
 
     def search_reserveId(self, keyword: str) -> Type[requests.Response]:
-        pass
+        """
+        Retrieves documents with matching reserve ID
+
+        Args:
+            keyword:                Overdrive reserve ID string
+
+        Returns:
+            `requests.Response` object
+        """
+
+        if type(keyword) is not str:
+            raise BookopsSolrError("Reserve id keyword argument must be a string.")
+
+        if not keyword:
+            raise BookopsSolrError("Missing keyword argument.")
+
+        payload = {
+            "q": f"econtrolnumber:{keyword}",
+            "fl": "id,title,author_raw,publishYear,created_date,material_type,call_number,isbn,language,eprovider,econtrolnumber,eurl,digital_avail_type,digital_copies_owned",
+        }
+
+        response = self._send_request(payload)
+
+        return response
 
     def find_expired_econtent(self):
         """

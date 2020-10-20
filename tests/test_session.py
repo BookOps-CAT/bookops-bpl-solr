@@ -232,6 +232,53 @@ class TestSolrSession:
             with pytest.raises(BookopsSolrError):
                 session.search_isbns(["9781680502404"])
 
+    def test_search_reserveId_success(self, mock_successful_session_get_response):
+        with SolrSession(
+            authorization="my_client_key", endpoint="example.com"
+        ) as session:
+            response = session.search_reserveId("some_string")
+            assert response.status_code == 200
+
+    @pytest.mark.parametrize("arg", [None, [], 1234])
+    def test_search_reserveId_invalid_keyword(self, arg):
+        err_msg = "Reserve id keyword argument must be a string."
+        with SolrSession(
+            authorization="my_client_key", endpoint="example.com"
+        ) as session:
+            with pytest.raises(BookopsSolrError) as exc:
+                session.search_reserveId(arg)
+                assert err_msg in str(exc.value)
+
+    def test_search_reserveId_empty_keyword(self):
+        err_msg = "Missing reserve id keyword argument."
+        with SolrSession(
+            authorization="my_client_key", endpoint="example.com"
+        ) as session:
+            with pytest.raises(BookopsSolrError) as exc:
+                session.search_reserveId("")
+                assert err_msg in str(exc.value)
+
+    def test_search_reserveId_timeout(self, mock_timeout):
+        with SolrSession(
+            authorization="my_client_key", endpoint="example.com"
+        ) as session:
+            with pytest.raises(BookopsSolrError):
+                session.search_reserveId("some_string")
+
+    def test_search_reserveId_connection_error(self, mock_connectionerror):
+        with SolrSession(
+            authorization="my_client_key", endpoint="example.com"
+        ) as session:
+            with pytest.raises(BookopsSolrError):
+                session.search_reserveId("some_string")
+
+    def test_search_reserveId_unexpected_error(self, mock_unexpected_error):
+        with SolrSession(
+            authorization="my_client_key", endpoint="example.com"
+        ) as session:
+            with pytest.raises(BookopsSolrError):
+                session.search_reserveId("some_string")
+
 
 @pytest.mark.webtest
 class TestSolrSessionLiveService:
@@ -306,4 +353,17 @@ class TestSolrSessionLiveService:
             assert (
                 response.url
                 == "https://www.bklynlibrary.org/solr/api/select/?rows=10&fq=ss_type%3Acatalog&q=isbn%3A9780810984912+OR+9781419741890+OR+0810984911&fl=id%2Ctitle%2Cauthor_raw%2CpublishYear%2Ccreated_date%2Cmaterial_type%2Ccall_number%2Cisbn%2Clanguage%2Ceprovider%2Cecontrolnumber%2Ceurl%2Cdigital_avail_type%2Cdigital_copies_owned"
+            )
+
+    def test_search_reserveId(self, live_key):
+        with SolrSession(
+            authorization=live_key.client_key, endpoint=live_key.endpoint
+        ) as session:
+            response = session.search_reserveId("8CD53ED9-CEBD-4F78-8BEF-20A58F6F3857")
+
+            assert "Client-Key" in response.request.headers
+            assert response.status_code == 200
+            assert (
+                response.url
+                == "https://www.bklynlibrary.org/solr/api/select/?rows=10&fq=ss_type%3Acatalog&q=econtrolnumber%3A8CD53ED9-CEBD-4F78-8BEF-20A58F6F3857&fl=id%2Ctitle%2Cauthor_raw%2CpublishYear%2Ccreated_date%2Cmaterial_type%2Ccall_number%2Cisbn%2Clanguage%2Ceprovider%2Cecontrolnumber%2Ceurl%2Cdigital_avail_type%2Cdigital_copies_owned"
             )
