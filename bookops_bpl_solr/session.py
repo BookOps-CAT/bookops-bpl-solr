@@ -154,10 +154,14 @@ class SolrSession(requests.Session):
         Retrieves documents with matching id (Sierra bib #)
 
         Args:
-            keyword:                Sierra bib number
+            keyword:                Sierra bib number as str with or without 'b'
+                                    prefix or last 9th check digit, or as int with
+                                    or without 9th check digit
 
         Returns:
             `requests.Response` object
+
+
         """
         if not keyword:
             raise BookopsSolrError("Missing keyword argument.")
@@ -177,8 +181,36 @@ class SolrSession(requests.Session):
     def search_isbns(self, keywords: List[str]) -> Type[requests.Response]:
         """
         Retrieves documents with matching ISBNs.
+
+        Args:
+            keywords:               list of ISBN strings
+
+        Returns:
+            `requests.Response` object
         """
-        pass
+
+        if type(keywords) is not list:
+            raise BookopsSolrError("ISBN keywords argument must be a list.")
+
+        if not keywords:
+            raise BookopsSolrError("Missing keywords argument.")
+
+        # prep multiple ISBNs
+        keywords = " OR ".join(keywords)
+
+        payload = {
+            "q": f"isbn:{keywords}",
+            "fl": "id,title,author_raw,publishYear,created_date,material_type,call_number,isbn,language,eprovider,econtrolnumber,eurl,digital_avail_type,digital_copies_owned",
+        }
+
+        response = self._send_request(payload)
+
+        return response
 
     def search_reserveId(self, keyword: str) -> Type[requests.Response]:
         pass
+
+    def find_expired_econtent(self):
+        """
+        Re
+        """

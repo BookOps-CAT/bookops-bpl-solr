@@ -185,6 +185,53 @@ class TestSolrSession:
             with pytest.raises(BookopsSolrError):
                 session.search_bibNo("b123456789")
 
+    def test_search_isbns_success(self, mock_successful_session_get_response):
+        with SolrSession(
+            authorization="my_client_key", endpoint="example.com"
+        ) as session:
+            response = session.search_isbns(["9781680502404"])
+            assert response.status_code == 200
+
+    @pytest.mark.parametrize("arg", [None, ""])
+    def test_search_isbns_invalid_keywords_type(self, arg):
+        err_msg = "ISBN keywords argument must be a list."
+        with SolrSession(
+            authorization="my_client_key", endpoint="example.com"
+        ) as session:
+            with pytest.raises(BookopsSolrError) as exc:
+                session.search_isbns(arg)
+                assert err_msg in str(exc.value)
+
+    def test_search_isbns_empty_list(self):
+        err_msg = "Missing keywords argument."
+        with SolrSession(
+            authorization="my_client_key", endpoint="example.com"
+        ) as session:
+            with pytest.raises(BookopsSolrError) as exc:
+                session.search_isbns([])
+                assert err_msg in str(exc.value)
+
+    def test_search_isbns_timeout(self, mock_timeout):
+        with SolrSession(
+            authorization="my_client_key", endpoint="example.com"
+        ) as session:
+            with pytest.raises(BookopsSolrError):
+                session.search_isbns(["9781680502404"])
+
+    def test_search_isbns_connection_error(self, mock_connectionerror):
+        with SolrSession(
+            authorization="my_client_key", endpoint="example.com"
+        ) as session:
+            with pytest.raises(BookopsSolrError):
+                session.search_isbns(["9781680502404"])
+
+    def test_search_isbns_unexpected_error(self, mock_unexpected_error):
+        with SolrSession(
+            authorization="my_client_key", endpoint="example.com"
+        ) as session:
+            with pytest.raises(BookopsSolrError):
+                session.search_isbns(["9781680502404"])
+
 
 @pytest.mark.webtest
 class TestSolrSessionLiveService:
@@ -203,6 +250,7 @@ class TestSolrSessionLiveService:
                 "rows": 2,
             }
             response = session._send_request(payload)
+            assert "Client-Key" in response.request.headers
             assert response.status_code == 200
             assert (
                 response.url
@@ -214,6 +262,8 @@ class TestSolrSessionLiveService:
             authorization=live_key.client_key, endpoint=live_key.endpoint
         ) as session:
             response = session.search_bibNo("b10000017a")
+
+            assert "Client-Key" in response.request.headers
             assert response.status_code == 200
             assert (
                 response.url
@@ -221,3 +271,39 @@ class TestSolrSessionLiveService:
             )
             assert response.json()["response"]["numFound"] == 1
             assert response.json()["response"]["docs"][0]["id"] == "10000017"
+
+    def test_search_bibNo_for_nonexistent_bib(self, live_key):
+        with SolrSession(
+            authorization=live_key.client_key, endpoint=live_key.endpoint
+        ) as session:
+            response = session.search_bibNo("b10000001a")
+
+            assert "Client-Key" in response.request.headers
+            assert response.status_code == 200
+            assert (
+                response.url
+                == "https://www.bklynlibrary.org/solr/api/select/?rows=10&fq=ss_type%3Acatalog&q=id%3A10000001&fl=id%2Ctitle%2Cauthor_raw%2CpublishYear%2Ccreated_date%2Cmaterial_type%2Ccall_number%2Cisbn%2Clanguage%2Ceprovider%2Cecontrolnumber%2Ceurl%2Cdigital_avail_type%2Cdigital_copies_owned"
+            )
+            assert response.json() == {
+                "response": {
+                    "numFound": 0,
+                    "start": 0,
+                    "numFoundExact": True,
+                    "docs": [],
+                }
+            }
+
+    def test_search_isbns(self, live_key):
+        with SolrSession(
+            authorization=live_key.client_key, endpoint=live_key.endpoint
+        ) as session:
+            response = session.search_isbns(
+                ["9780810984912", "9781419741890", "0810984911"]
+            )
+
+            assert "Client-Key" in response.request.headers
+            assert response.status_code == 200
+            assert (
+                response.url
+                == "https://www.bklynlibrary.org/solr/api/select/?rows=10&fq=ss_type%3Acatalog&q=isbn%3A9780810984912+OR+9781419741890+OR+0810984911&fl=id%2Ctitle%2Cauthor_raw%2CpublishYear%2Ccreated_date%2Cmaterial_type%2Ccall_number%2Cisbn%2Clanguage%2Ceprovider%2Cecontrolnumber%2Ceurl%2Cdigital_avail_type%2Cdigital_copies_owned"
+            )
