@@ -1,0 +1,30 @@
+{
+  "response": {
+    "numFound": 1,
+    "start": 0,
+    "numFoundExact": true,
+    "docs": [
+      {
+        "id": "12141134",
+        "title": "The Fragile Ordinary",
+        "author_raw": "Young, Samantha.",
+        "publishYear": 2018,
+        "material_type": "eBook",
+        "call_number": "eBOOK",
+        "isbn": [
+          "9781488088933",
+          "978-1488088933",
+          "1488088934"
+        ],
+        "language": [
+          "English"
+        ],
+        "eprovider": "OverDrive, Inc.",
+        "econtrolnumber": "96CDB3B7-FD12-459C-8170-256209159619",
+        "eurl": "https://link.overdrive.com/?websiteID=89&titleID=3566718",
+        "digital_avail_type": "Normal",
+        "digital_copies_owned": 0
+      }
+    ]
+  }
+}
