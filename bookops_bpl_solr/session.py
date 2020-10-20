@@ -222,7 +222,7 @@ class SolrSession(requests.Session):
             raise BookopsSolrError("Reserve id keyword argument must be a string.")
 
         if not keyword:
-            raise BookopsSolrError("Missing keyword argument.")
+            raise BookopsSolrError("Missing reserve id keyword argument.")
 
         payload = {
             "q": f"econtrolnumber:{keyword}",
@@ -233,7 +233,21 @@ class SolrSession(requests.Session):
 
         return response
 
-    def find_expired_econtent(self):
+    def find_expired_econtent(
+        self, rows: int = 50, result_page: int = 0
+    ) -> Type[requests.Response]:
         """
-        Re
+        Retrieves Overdrive e-content documents that expired and library has no longer
+        access to.
+        By default returns 50 documents per page
+
+        Args:
+            rows:                   number of retrieved documents per response page
+            result_page:            page of retrieved results
+
+        Returns:
+            `requests.Response` object
         """
+
+        if type(rows) is not int or type(result_page) is not int:
+            raise BookopsSolrError("Invalid type of arguments passed.")
