@@ -1,0 +1,101 @@
+{
+  "response": {
+    "numFound": 1386,
+    "start": 0,
+    "numFoundExact": true,
+    "docs": [
+      {
+        "id": "10841318",
+        "title": "The Civil War.",
+        "author_raw": "Robertson, James I.",
+        "author": "James I Robertson",
+        "opac_label": "",
+        "suppressed": false,
+        "deleted": false,
+        "created_date": "2002-08-31T21:14:32Z",
+        "publishYear": 1963,
+        "material_type": "Book",
+        "ss_type": "catalog",
+        "call_number": "973.7 R651 C",
+        "language": [
+          "English"
+        ],
+        "target_age": [
+          "Adults"
+        ],
+        "item_locations": [
+          "Central - HBR Storage, LIB USE ONLY"
+        ],
+        "popularity": 9,
+        "publisher": "Washington : U.S. Civil War Centennial Commission, 1963. ",
+        "available": false,
+        "fiction_status": "Nonfiction",
+        "ss_child": "child",
+        "_version_": 1680244519313866752,
+        "timestamp": "2020-10-11T08:47:23.326Z"
+      },
+      {
+        "id": "11185842",
+        "title": "Civil War",
+        "author_raw": "Golay, Michael, 1951-",
+        "authorraw": [
+          "Michael Golay ; John S. Bowman, general editor."
+        ],
+        "author": "Michael Golay",
+        "series": [
+          "America at war"
+        ],
+        "additional_contributor": [
+          "Bowman, John Stewart,",
+          "1931-"
+        ],
+        "opac_label": "",
+        "suppressed": false,
+        "deleted": false,
+        "created_date": "2004-09-02T19:23:24Z",
+        "publishYear": 2003,
+        "material_type": "Book",
+        "ss_type": "catalog",
+        "call_number": "973.7 G",
+        "isbn": [
+          "0816049343"
+        ],
+        "language": [
+          "English"
+        ],
+        "summary": [
+          "An account of the Civil War, discussing political background, military strategy, and battles."
+        ],
+        "target_age": [
+          "Teens"
+        ],
+        "item_locations": [
+          "Stone Ave YA Non-Fic, 2006-03-09T09:00:00Z",
+          "Brownsville YA Non-Fic, CHECK SHELVES",
+          "Flatlands YA Non-Fic, CHECK SHELVES",
+          "Gravesend YA Non-Fic, TEMP CLOSED",
+          "Dyker YA Non-Fic, CHECK SHELVES",
+          "Saratoga YA Non-Fic, 2009-05-27T08:00:00Z",
+          "W Whitman YA Non-Fic, CHECK SHELVES",
+          "Boro Park YA Non-Fic, TEMP CLOSED",
+          "E Parkway YA Non-Fic, 2014-07-31T08:00:00Z",
+          "Kings Hwy YA Non-Fic, TEMP CLOSED",
+          "Midwood YA Non-Fic, DELETE"
+        ],
+        "available_locations": [
+          "Brownsville Library",
+          "Flatlands Library",
+          "Dyker Library",
+          "Walt Whitman Library"
+        ],
+        "popularity": 373,
+        "publisher": "New York : Facts On File, [2003] ©2003 ",
+        "available": true,
+        "fiction_status": "Nonfiction",
+        "ss_child": "child",
+        "_version_": 1680249733963055104,
+        "timestamp": "2020-10-11T10:10:16.274Z"
+      }
+    ]
+  }
+}
