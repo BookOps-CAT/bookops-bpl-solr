@@ -77,6 +77,17 @@ class SolrSession(requests.Session):
 
         return {**default_payload, **payload}
 
+    def _prep_response_fields(self, response_fields: Union[str, List[str]]) -> str:
+        """
+        Formats as comma separated string response fields passed as a list
+        """
+        if type(response_fields) is list:
+            return ",".join(response_fields)
+        elif type(response_fields) is str:
+            return response_fields
+        else:
+            raise BookopsSolrError("Invalid type of 'reposponse_format' argument.")
+
     def _prep_sierra_number(self, bid: Union[str, int]) -> str:
         """
         Strips b prefix and removes last check digit
@@ -149,14 +160,24 @@ class SolrSession(requests.Session):
         except Exception:
             raise BookopsSolrError(f"Unexpected error: {sys.exc_info()[0]}")
 
-    def search_bibNo(self, keyword: Union[str, int]) -> Type[requests.Response]:
+    def search_bibNo(
+        self,
+        keyword: Union[str, int],
+        default_response_fields: bool = True,
+        response_fields: Union[str, List[str]] = None,
+    ) -> Type[requests.Response]:
         """
         Retrieves documents with matching id (Sierra bib #)
 
         Args:
-            keyword:                Sierra bib number as str with or without 'b'
-                                    prefix or last 9th check digit, or as int with
-                                    or without 9th check digit
+            keyword:                    Sierra bib number as str with or without 'b'
+                                        prefix or last 9th check digit, or as int with
+                                        or without 9th check digit
+            default_response_fields:    when True returns only predetermined fields,
+                                        when False returns all fields unless specified
+                                        in `response_fields` argument
+            response_fields:            fields to be returned as comma separated string,
+                                        or a list of strings
 
         Returns:
             `requests.Response` object
@@ -169,10 +190,14 @@ class SolrSession(requests.Session):
         # verify and prep bib number
         keyword = self._prep_sierra_number(keyword)
 
-        payload = {
-            "q": f"id:{keyword}",
-            "fl": "id,title,author_raw,publishYear,created_date,material_type,call_number,isbn,language,eprovider,econtrolnumber,eurl,digital_avail_type,digital_copies_owned",
-        }
+        # got with default fields
+        if default_response_fields:
+            response_fields = "id,title,author_raw,publishYear,created_date,material_type,call_number,isbn,language,eprovider,econtrolnumber,eurl,digital_avail_type,digital_copies_owned"
+        else:
+            if response_fields:
+                response_fields = self._prep_response_fields(response_fields)
+
+        payload = {"q": f"id:{keyword}", "fl": response_fields}
 
         response = self._send_request(payload)
 
