@@ -3,6 +3,7 @@
 """
 Tests session.py module
 """
+import warnings
 
 import pytest
 
@@ -58,6 +59,32 @@ class TestSolrSession:
         assert session.headers["Client-Key"] == "my_client_key"
 
     @pytest.mark.parametrize(
+        "arg_def,arg_field,expectation",
+        [
+            (
+                True,
+                None,
+                "id,title,author_raw,publishYear,created_date,material_type,call_number,isbn,language,eprovider,econtrolnumber,eurl,digital_avail_type,digital_copies_owned",
+            ),
+            (
+                False,
+                "field1,field2",
+                "field1,field2",
+            ),
+            (False, None, None),
+        ],
+    )
+    def test_determine_response_fields(self, arg_def, arg_field, expectation):
+        session = SolrSession("my_client_key", "example.com")
+        assert (
+            session._determine_response_fields(
+                default_response_fields=arg_def, response_fields=arg_field
+            )
+            == expectation
+        )
+        session.close()
+
+    @pytest.mark.parametrize(
         "arg,expectation",
         [
             (
@@ -81,6 +108,24 @@ class TestSolrSession:
     def test_merge_payload_with_defaults(self, arg, expectation):
         session = SolrSession("my_client_key", "example.com")
         assert session._merge_with_payload_defaults(arg) == expectation
+        session.close()
+
+    @pytest.mark.parametrize(
+        "arg,expectation", [(["a", "b", "c"], "a,b,c"), ("a,b,c", "a,b,c")]
+    )
+    def test_prep_response_fields(self, arg, expectation):
+        session = SolrSession("my_client_key", "example.com")
+        assert session._prep_response_fields(arg) == expectation
+        session.close()
+
+    @pytest.mark.parametrize("arg", [None, 1234])
+    def test_prep_response_fields_exception(self, arg):
+        err_msg = "Invalid type of 'reposponse_format' argument."
+        session = SolrSession("my_client_key", "example.com")
+        with pytest.raises(BookopsSolrError) as exc:
+            session._prep_response_fields(arg)
+            assert err_msg in str(exc.value)
+        session.close()
 
     @pytest.mark.parametrize("arg", [({}, None, "some_str")])
     def test_send_request_payload_errors(self, arg):

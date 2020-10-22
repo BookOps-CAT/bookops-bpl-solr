@@ -6,6 +6,7 @@ This module provides SolrSession class for requests to BPL Solr platform
 
 import sys
 from typing import Dict, List, Tuple, Type, Union
+import warnings
 
 import requests
 
@@ -64,6 +65,14 @@ class SolrSession(requests.Session):
         # set session headers
         self.headers.update({"Client-Key": self.authorization})
         self.headers.update({"User-Agent": self.agent})
+
+    def _determine_response_fields(self, default_response_fields, response_fields):
+        if default_response_fields:
+            response_fields = "id,title,author_raw,publishYear,created_date,material_type,call_number,isbn,language,eprovider,econtrolnumber,eurl,digital_avail_type,digital_copies_owned"
+        else:
+            if response_fields:
+                response_fields = self._prep_response_fields(response_fields)
+        return response_fields
 
     def _merge_with_payload_defaults(self, payload: Dict) -> Dict:
         """
@@ -190,12 +199,10 @@ class SolrSession(requests.Session):
         # verify and prep bib number
         keyword = self._prep_sierra_number(keyword)
 
-        # got with default fields
-        if default_response_fields:
-            response_fields = "id,title,author_raw,publishYear,created_date,material_type,call_number,isbn,language,eprovider,econtrolnumber,eurl,digital_avail_type,digital_copies_owned"
-        else:
-            if response_fields:
-                response_fields = self._prep_response_fields(response_fields)
+        # determine if pass default, custom, or allow all fields in response
+        response_fields = self._determine_response_fields(
+            default_response_fields, response_fields
+        )
 
         payload = {"q": f"id:{keyword}", "fl": response_fields}
 
@@ -203,12 +210,22 @@ class SolrSession(requests.Session):
 
         return response
 
-    def search_isbns(self, keywords: List[str]) -> Type[requests.Response]:
+    def search_isbns(
+        self,
+        keywords: List[str],
+        default_response_fields: bool = True,
+        response_fields: Union[str, List[str]] = None,
+    ) -> Type[requests.Response]:
         """
         Retrieves documents with matching ISBNs.
 
         Args:
-            keywords:               list of ISBN strings
+            keywords:                   list of ISBN strings
+            default_response_fields:    when True returns only predetermined fields,
+                                        when False returns all fields unless specified
+                                        in `response_fields` argument
+            response_fields:            fields to be returned as comma separated string,
+                                        or a list of strings
 
         Returns:
             `requests.Response` object
@@ -223,21 +240,36 @@ class SolrSession(requests.Session):
         # prep multiple ISBNs
         keywords = " OR ".join(keywords)
 
+        # determine if pass default, custom, or allow all fields in response
+        response_fields = self._determine_response_fields(
+            default_response_fields, response_fields
+        )
+
         payload = {
             "q": f"isbn:{keywords}",
-            "fl": "id,title,author_raw,publishYear,created_date,material_type,call_number,isbn,language,eprovider,econtrolnumber,eurl,digital_avail_type,digital_copies_owned",
+            "fl": response_fields,
         }
 
         response = self._send_request(payload)
 
         return response
 
-    def search_reserveId(self, keyword: str) -> Type[requests.Response]:
+    def search_reserveId(
+        self,
+        keyword: str,
+        default_response_fields: bool = True,
+        response_fields: Union[str, List[str]] = None,
+    ) -> Type[requests.Response]:
         """
         Retrieves documents with matching reserve ID
 
         Args:
-            keyword:                Overdrive reserve ID string
+            keyword:                    Overdrive reserve ID string
+            default_response_fields:    when True returns only predetermined fields,
+                                        when False returns all fields unless specified
+                                        in `response_fields` argument
+            response_fields:            fields to be returned as comma separated string,
+                                        or a list of strings
 
         Returns:
             `requests.Response` object
@@ -249,10 +281,12 @@ class SolrSession(requests.Session):
         if not keyword:
             raise BookopsSolrError("Missing reserve id keyword argument.")
 
-        payload = {
-            "q": f"econtrolnumber:{keyword}",
-            "fl": "id,title,author_raw,publishYear,created_date,material_type,call_number,isbn,language,eprovider,econtrolnumber,eurl,digital_avail_type,digital_copies_owned",
-        }
+        # determine if pass default, custom, or allow all fields in response
+        response_fields = self._determine_response_fields(
+            default_response_fields, response_fields
+        )
+
+        payload = {"q": f"econtrolnumber:{keyword}", "fl": response_fields}
 
         response = self._send_request(payload)
 
