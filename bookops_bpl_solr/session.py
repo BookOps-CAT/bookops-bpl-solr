@@ -339,7 +339,7 @@ class SolrSession(requests.Session):
         if type(rows) is not int or type(result_page) is not int:
             raise BookopsSolrError("Invalid type of arguments passed.")
 
-        if 100 < rows < 1:
+        if rows < 1 or rows > 100:
             raise BookopsSolrError(
                 "Rows argument must be bigger than 1 and no larger than 100."
             )
@@ -349,7 +349,12 @@ class SolrSession(requests.Session):
             default_response_fields, response_fields
         )
 
-        payload = {"rows": rows, "start": result_page, "fl": response_fields}
+        payload = {
+            "q": "digital_copies_owned:0 AND digital_avail_type:Normal",
+            "rows": rows,
+            "start": result_page,
+            "fl": response_fields,
+        }
 
         response = self._send_request(payload, hooks)
 

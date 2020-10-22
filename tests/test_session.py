@@ -324,6 +324,63 @@ class TestSolrSession:
             with pytest.raises(BookopsSolrError):
                 session.search_reserveId("some_string")
 
+    def test_find_expired_econtent_success(self, mock_successful_session_get_response):
+        with SolrSession(
+            authorization="my_client_key", endpoint="example.com"
+        ) as session:
+            response = session.find_expired_econtent()
+            assert response.status_code == 200
+
+    @pytest.mark.parametrize(
+        "arg1,arg2",
+        [
+            (None, None),
+            ("foo", 1),
+            (1, "foo"),
+        ],
+    )
+    def test_find_expired_econtent_invalid_args(self, arg1, arg2):
+        err_msg = "Invalid type of arguments passed."
+        with SolrSession(
+            authorization="my_client_key", endpoint="example.com"
+        ) as session:
+            with pytest.raises(BookopsSolrError) as exc:
+                session.find_expired_econtent(rows=arg1, result_page=arg2)
+                assert err_msg in str(exc.value)
+
+    @pytest.mark.parametrize("arg", [0, 101, -3])
+    def test_find_expired_econtent_too_many_rows(
+        self, arg, mock_successful_session_get_response
+    ):
+        err_msg = "Rows argument must be bigger than 1 and no larger than 100."
+        with SolrSession(
+            authorization="my_client_key", endpoint="example.com"
+        ) as session:
+            with pytest.raises(BookopsSolrError) as exc:
+                session.find_expired_econtent(rows=arg)
+                assert err_msg in str(exc.value)
+
+    def test_find_expired_econtent_timeout(self, mock_timeout):
+        with SolrSession(
+            authorization="my_client_key", endpoint="example.com"
+        ) as session:
+            with pytest.raises(BookopsSolrError):
+                session.find_expired_econtent()
+
+    def test_find_expired_econtent_connection_error(self, mock_connectionerror):
+        with SolrSession(
+            authorization="my_client_key", endpoint="example.com"
+        ) as session:
+            with pytest.raises(BookopsSolrError):
+                session.find_expired_econtent()
+
+    def test_find_expired_econtent_unexpected_error(self, mock_unexpected_error):
+        with SolrSession(
+            authorization="my_client_key", endpoint="example.com"
+        ) as session:
+            with pytest.raises(BookopsSolrError):
+                session.find_expired_econtent()
+
 
 @pytest.mark.webtest
 class TestSolrSessionLiveService:
@@ -446,4 +503,18 @@ class TestSolrSessionLiveService:
             assert (
                 response.url
                 == "https://www.bklynlibrary.org/solr/api/select/?rows=10&fq=ss_type%3Acatalog&q=econtrolnumber%3A8CD53ED9-CEBD-4F78-8BEF-20A58F6F3857&fl=id%2Ctitle%2Cauthor_raw%2CpublishYear%2Ccreated_date%2Cmaterial_type%2Ccall_number%2Cisbn%2Clanguage%2Ceprovider%2Cecontrolnumber%2Ceurl%2Cdigital_avail_type%2Cdigital_copies_owned"
+            )
+
+    @pytest.mark.parametrize("arg1,arg2", [(5, 0), (5, 1), (3, 2)])
+    def test_find_expired_econtent(self, arg1, arg2, live_key):
+        with SolrSession(
+            authorization=live_key.client_key, endpoint=live_key.endpoint
+        ) as session:
+            response = session.find_expired_econtent(rows=arg1, result_page=arg2)
+
+            assert "Client-Key" in response.request.headers
+            assert response.status_code == 200
+            assert (
+                response.url
+                == f"https://www.bklynlibrary.org/solr/api/select/?rows={arg1}&fq=ss_type%3Acatalog&q=digital_copies_owned%3A0+AND+digital_avail_type%3ANormal&start={arg2}&fl=id%2Ctitle%2Cauthor_raw%2CpublishYear%2Ccreated_date%2Cmaterial_type%2Ccall_number%2Cisbn%2Clanguage%2Ceprovider%2Cecontrolnumber%2Ceurl%2Cdigital_avail_type%2Cdigital_copies_owned"
             )
