@@ -417,6 +417,24 @@ class TestSolrSessionLiveService:
                 == "https://www.bklynlibrary.org/solr/api/select/?rows=10&fq=ss_type%3Acatalog&q=isbn%3A9780810984912+OR+9781419741890+OR+0810984911&fl=id%2Ctitle%2Cauthor_raw%2CpublishYear%2Ccreated_date%2Cmaterial_type%2Ccall_number%2Cisbn%2Clanguage%2Ceprovider%2Cecontrolnumber%2Ceurl%2Cdigital_avail_type%2Cdigital_copies_owned"
             )
 
+    def test_search_isbns_empty(self, live_key):
+        with SolrSession(
+            authorization=live_key.client_key, endpoint=live_key.endpoint
+        ) as session:
+            response = session.search_isbns(
+                ["978081098491"]
+            )  # last chr from isbns is missing
+
+            assert response.status_code == 200
+            assert response.json() == {
+                "response": {
+                    "numFound": 0,
+                    "start": 0,
+                    "numFoundExact": True,
+                    "docs": [],
+                }
+            }
+
     def test_search_reserveId(self, live_key):
         with SolrSession(
             authorization=live_key.client_key, endpoint=live_key.endpoint

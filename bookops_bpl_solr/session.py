@@ -137,6 +137,9 @@ class SolrSession(requests.Session):
 
         Args:
             payload:                query parameters as dictionary
+            hooks:                  Requests library hook system that can be
+                                    used for signal event handling, see more at:
+                                    https://requests.readthedocs.io/en/master/user/advanced/#event-hooks
 
         Returns:
             `requests.Response` instance
@@ -174,6 +177,7 @@ class SolrSession(requests.Session):
         keyword: Union[str, int],
         default_response_fields: bool = True,
         response_fields: Union[str, List[str]] = None,
+        hooks: Dict = None,
     ) -> Type[requests.Response]:
         """
         Retrieves documents with matching id (Sierra bib #)
@@ -187,6 +191,9 @@ class SolrSession(requests.Session):
                                         in `response_fields` argument
             response_fields:            fields to be returned as comma separated string,
                                         or a list of strings
+            hooks:                      Requests library hook system that can be
+                                        used for signal event handling, see more at:
+                                        https://requests.readthedocs.io/en/master/user/advanced/#event-hooks
 
         Returns:
             `requests.Response` object
@@ -206,7 +213,7 @@ class SolrSession(requests.Session):
 
         payload = {"q": f"id:{keyword}", "fl": response_fields}
 
-        response = self._send_request(payload)
+        response = self._send_request(payload, hooks)
 
         return response
 
@@ -215,6 +222,7 @@ class SolrSession(requests.Session):
         keywords: List[str],
         default_response_fields: bool = True,
         response_fields: Union[str, List[str]] = None,
+        hooks: Dict = None,
     ) -> Type[requests.Response]:
         """
         Retrieves documents with matching ISBNs.
@@ -226,6 +234,9 @@ class SolrSession(requests.Session):
                                         in `response_fields` argument
             response_fields:            fields to be returned as comma separated string,
                                         or a list of strings
+            hooks:                      Requests library hook system that can be
+                                        used for signal event handling, see more at:
+                                        https://requests.readthedocs.io/en/master/user/advanced/#event-hooks
 
         Returns:
             `requests.Response` object
@@ -250,7 +261,7 @@ class SolrSession(requests.Session):
             "fl": response_fields,
         }
 
-        response = self._send_request(payload)
+        response = self._send_request(payload, hooks)
 
         return response
 
@@ -259,6 +270,7 @@ class SolrSession(requests.Session):
         keyword: str,
         default_response_fields: bool = True,
         response_fields: Union[str, List[str]] = None,
+        hooks: Dict = None,
     ) -> Type[requests.Response]:
         """
         Retrieves documents with matching reserve ID
@@ -270,6 +282,9 @@ class SolrSession(requests.Session):
                                         in `response_fields` argument
             response_fields:            fields to be returned as comma separated string,
                                         or a list of strings
+            hooks:                      Requests library hook system that can be
+                                        used for signal event handling, see more at:
+                                        https://requests.readthedocs.io/en/master/user/advanced/#event-hooks
 
         Returns:
             `requests.Response` object
@@ -288,12 +303,17 @@ class SolrSession(requests.Session):
 
         payload = {"q": f"econtrolnumber:{keyword}", "fl": response_fields}
 
-        response = self._send_request(payload)
+        response = self._send_request(payload, hooks)
 
         return response
 
     def find_expired_econtent(
-        self, rows: int = 50, result_page: int = 0
+        self,
+        rows: int = 50,
+        result_page: int = 0,
+        default_response_fields: bool = True,
+        response_fields: Union[str, List[str]] = None,
+        hooks: Dict = None,
     ) -> Type[requests.Response]:
         """
         Retrieves Overdrive e-content documents that expired and library has no longer
@@ -301,8 +321,16 @@ class SolrSession(requests.Session):
         By default returns 50 documents per page
 
         Args:
-            rows:                   number of retrieved documents per response page
-            result_page:            page of retrieved results
+            rows:                       number of retrieved documents per response page
+            result_page:                page of retrieved results
+            default_response_fields:    when True returns only predetermined fields,
+                                        when False returns all fields unless specified
+                                        in `response_fields` argument
+            response_fields:            fields to be returned as comma separated string,
+                                        or a list of strings
+            hooks:                      Requests library hook system that can be
+                                        used for signal event handling, see more at:
+                                        https://requests.readthedocs.io/en/master/user/advanced/#event-hooks
 
         Returns:
             `requests.Response` object
@@ -310,3 +338,19 @@ class SolrSession(requests.Session):
 
         if type(rows) is not int or type(result_page) is not int:
             raise BookopsSolrError("Invalid type of arguments passed.")
+
+        if 100 < rows < 1:
+            raise BookopsSolrError(
+                "Rows argument must be bigger than 1 and no larger than 100."
+            )
+
+        # determine if pass default, custom, or allow all fields in response
+        response_fields = self._determine_response_fields(
+            default_response_fields, response_fields
+        )
+
+        payload = {"rows": rows, "start": result_page, "fl": response_fields}
+
+        response = self._send_request(payload, hooks)
+
+        return response
