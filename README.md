@@ -19,7 +19,7 @@ python -m pip install git+https://github.com/BookOps-CAT/bookops-bpl-solr
 
 ## Basic usage
 
-Retrieve a specific Sierra bib record:
+Retrieve a specific Sierra bib:
 ```python
 with SolrSession(
     authorization="your_client_key", endpoint="solr_endpoint"
@@ -52,7 +52,7 @@ with SolrSession(
 }
 ```
 
-Retrieve records maching particular ISBNs:
+Retrieve records matching particular ISBNs:
 ```python
 with SolrSession(authorization="your_client_key", endpoint="solr_endpoint") as session:
     response = session.search_isbns(
