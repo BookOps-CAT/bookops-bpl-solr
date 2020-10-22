@@ -368,13 +368,15 @@ class TestSolrSessionLiveService:
         with SolrSession(
             authorization=live_key.client_key, endpoint=live_key.endpoint
         ) as session:
-            response = session.search_bibNo("b10000001a")
+            response = session.search_bibNo(
+                "b10000001a", default_response_fields=False, response_fields="id,title"
+            )
 
             assert "Client-Key" in response.request.headers
             assert response.status_code == 200
             assert (
                 response.url
-                == "https://www.bklynlibrary.org/solr/api/select/?rows=10&fq=ss_type%3Acatalog&q=id%3A10000001&fl=id%2Ctitle%2Cauthor_raw%2CpublishYear%2Ccreated_date%2Cmaterial_type%2Ccall_number%2Cisbn%2Clanguage%2Ceprovider%2Cecontrolnumber%2Ceurl%2Cdigital_avail_type%2Cdigital_copies_owned"
+                == "https://www.bklynlibrary.org/solr/api/select/?rows=10&fq=ss_type%3Acatalog&q=id%3A10000001&fl=id%2Ctitle"
             )
             assert response.json() == {
                 "response": {
@@ -384,6 +386,21 @@ class TestSolrSessionLiveService:
                     "docs": [],
                 }
             }
+
+    def test_search_bibNo_full_response_fields(self, live_key):
+        with SolrSession(
+            authorization=live_key.client_key, endpoint=live_key.endpoint
+        ) as session:
+            response = session.search_bibNo("b10000017a", default_response_fields=False)
+
+            assert "Client-Key" in response.request.headers
+            assert response.status_code == 200
+            assert (
+                response.url
+                == "https://www.bklynlibrary.org/solr/api/select/?rows=10&fq=ss_type%3Acatalog&q=id%3A10000017"
+            )
+            assert response.json()["response"]["numFound"] == 1
+            assert response.json()["response"]["docs"][0]["id"] == "10000017"
 
     def test_search_isbns(self, live_key):
         with SolrSession(
