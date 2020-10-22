@@ -3,8 +3,6 @@
 """
 Tests session.py module
 """
-import warnings
-
 import pytest
 
 from bookops_bpl_solr.session import SolrSession, BookopsSolrError
