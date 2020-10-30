@@ -8,7 +8,7 @@ Requires Python 3.7 & up.
 
 ## version
 
-> 0.1.0
+> 0.1.1
 
 ## Instalation
 Install via pip:

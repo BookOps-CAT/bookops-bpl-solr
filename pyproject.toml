@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "bookops-bpl-solr"
-version = "0.1.0"
+version = "0.1.1"
 description = "BookOps Python wrapper around BPL Solr service."
 license = "MIT"
 authors = ["Tomasz Kalata <klingaroo@gmail.com>"]
