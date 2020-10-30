@@ -9,7 +9,7 @@ readme = "README.md"
 keywords = ["api", "cataloging", "bibliographic records", "library metadata", "bpl"]
 
 [tool.poetry.dependencies]
-python = "^3.8"
+python = "^3.7"
 requests = "^2.24.0"
 
 [tool.poetry.dev-dependencies]
@@ -23,7 +23,7 @@ black = "^20.8b1"
 
 [tool.black]
 line-length = 88
-target-version = ['py38']
+target-version = ['py37']
 include = '\.pyi?$'
 exclude = '''
 (
