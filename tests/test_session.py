@@ -23,7 +23,7 @@ class TestSolrSession:
         err_msg = "Invalid authorization. Argument must be a Client-Key string."
         with pytest.raises(BookopsSolrError) as exc:
             SolrSession(authorization=arg, endpoint="example.com")
-            assert err_msg in str(exc.value)
+        assert err_msg in str(exc.value)
 
     def test_init_endpoint_param(self):
         session = SolrSession("my_client_key", "example.com")
@@ -34,7 +34,7 @@ class TestSolrSession:
         err_msg = "Invalid endpoint argument. It must be a Client-Key string."
         with pytest.raises(BookopsSolrError) as exc:
             SolrSession(authorization="my_client_key", endpoint=arg)
-            assert err_msg in str(exc.value)
+        assert err_msg in str(exc.value)
 
     @pytest.mark.parametrize("arg", [None, "", [], {}])
     def test_init_agent_default_param(self, arg):
@@ -50,7 +50,7 @@ class TestSolrSession:
         err_msg = "Invalid type of an agent argument."
         with pytest.raises(BookopsSolrError) as exc:
             SolrSession("my_client_key", "example.com", agent=arg)
-            assert err_msg in str(exc.value)
+        assert err_msg in str(exc.value)
 
     def test_authorization_in_header(self):
         session = SolrSession("my_client_key", "example.com")
@@ -122,7 +122,7 @@ class TestSolrSession:
         session = SolrSession("my_client_key", "example.com")
         with pytest.raises(BookopsSolrError) as exc:
             session._prep_response_fields(arg)
-            assert err_msg in str(exc.value)
+        assert err_msg in str(exc.value)
         session.close()
 
     @pytest.mark.parametrize("arg", [({}, None, "some_str")])
@@ -131,7 +131,8 @@ class TestSolrSession:
         session = SolrSession("my_client_key", "example.com")
         with pytest.raises(BookopsSolrError) as exc:
             session._send_request(arg)
-            assert err_msg in str(exc.value)
+        assert err_msg in str(exc.value)
+        session.close()
 
     def test_send_request_success(self, mock_successful_session_get_response):
         with SolrSession(
@@ -188,7 +189,7 @@ class TestSolrSession:
         ) as session:
             with pytest.raises(BookopsSolrError) as exc:
                 session._prep_sierra_number(arg)
-                assert err_msg in str(exc.value)
+            assert err_msg in str(exc.value)
 
     def test_search_bibNo_success(self, mock_successful_session_get_response):
         with SolrSession(
@@ -205,7 +206,7 @@ class TestSolrSession:
         ) as session:
             with pytest.raises(BookopsSolrError) as exc:
                 session.search_bibNo(arg)
-                assert err_msg in str(exc.value)
+            assert err_msg in str(exc.value)
 
     def test_search_bibNo_timeout(self, mock_timeout):
         with SolrSession(
@@ -243,7 +244,7 @@ class TestSolrSession:
         ) as session:
             with pytest.raises(BookopsSolrError) as exc:
                 session.search_isbns(arg)
-                assert err_msg in str(exc.value)
+            assert err_msg in str(exc.value)
 
     def test_search_isbns_empty_list(self):
         err_msg = "Missing keywords argument."
@@ -252,7 +253,7 @@ class TestSolrSession:
         ) as session:
             with pytest.raises(BookopsSolrError) as exc:
                 session.search_isbns([])
-                assert err_msg in str(exc.value)
+            assert err_msg in str(exc.value)
 
     def test_search_isbns_timeout(self, mock_timeout):
         with SolrSession(
@@ -290,7 +291,7 @@ class TestSolrSession:
         ) as session:
             with pytest.raises(BookopsSolrError) as exc:
                 session.search_reserveId(arg)
-                assert err_msg in str(exc.value)
+            assert err_msg in str(exc.value)
 
     def test_search_reserveId_empty_keyword(self):
         err_msg = "Missing reserve id keyword argument."
@@ -299,7 +300,7 @@ class TestSolrSession:
         ) as session:
             with pytest.raises(BookopsSolrError) as exc:
                 session.search_reserveId("")
-                assert err_msg in str(exc.value)
+            assert err_msg in str(exc.value)
 
     def test_search_reserveId_timeout(self, mock_timeout):
         with SolrSession(
@@ -344,7 +345,7 @@ class TestSolrSession:
         ) as session:
             with pytest.raises(BookopsSolrError) as exc:
                 session.find_expired_econtent(rows=arg1, result_page=arg2)
-                assert err_msg in str(exc.value)
+            assert err_msg in str(exc.value)
 
     @pytest.mark.parametrize("arg", [0, 101, -3])
     def test_find_expired_econtent_too_many_rows(
@@ -356,7 +357,7 @@ class TestSolrSession:
         ) as session:
             with pytest.raises(BookopsSolrError) as exc:
                 session.find_expired_econtent(rows=arg)
-                assert err_msg in str(exc.value)
+            assert err_msg in str(exc.value)
 
     def test_find_expired_econtent_timeout(self, mock_timeout):
         with SolrSession(
