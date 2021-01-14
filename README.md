@@ -87,7 +87,7 @@ with SolrSession(authorization="your_client_key", endpoint="solr_endpoint") as s
 
 ## Changelog
 
-+ v0.1.1 (Oct 30, 2020)
++ v0.1.1 (October 30, 2020)
     + pyproject.toml python 3.9 compatibility added
     + default py 3.8 env
     + urllib3 bump from 1.25.10 to 1.25.11
