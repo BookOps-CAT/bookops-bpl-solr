@@ -1,14 +1,15 @@
-[![Build Status](https://travis-ci.com/BookOps-CAT/bookops-bpl-solr.svg?branch=master)](https://travis-ci.com/BookOps-CAT/bookops-bpl-solr) [![Coverage Status](https://coveralls.io/repos/github/BookOps-CAT/bookops-bpl-solr/badge.svg?branch=master)](https://coveralls.io/github/BookOps-CAT/bookops-bpl-solr?branch=master) ![GitHub tag (latest SemVer)](https://img.shields.io/github/v/tag/BookOps-CAT/bookops-bpl-solr) [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black) [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+![tests](https://github.com/BookOps-CAT/bookops-bpl-solr/actions/workflows/unit-tests.yaml/badge.svg?branch=master) [![Coverage Status](https://coveralls.io/repos/github/BookOps-CAT/bookops-bpl-solr/badge.svg?branch=master)](https://coveralls.io/github/BookOps-CAT/bookops-bpl-solr?branch=master) ![GitHub tag (latest SemVer)](https://img.shields.io/github/v/tag/BookOps-CAT/bookops-bpl-solr) [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black) [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 # bookops-bpl-solr client
 BookOps Python wrapper around BPL Solr service.
 
 Requires Python 3.7 & up.
+Requires credentials from BPL WebApps.
 
 
 ## version
 
-> 0.1.1
+> 0.2.0
 
 ## Instalation
 Install via pip:
@@ -87,12 +88,28 @@ with SolrSession(authorization="your_client_key", endpoint="solr_endpoint") as s
 
 ## Changelog
 
-+ v0.1.1 (October 30, 2020)
-    + pyproject.toml python 3.9 compatibility added
-    + default py 3.8 env
-    + urllib3 bump from 1.25.10 to 1.25.11
+### [0.2.0] - 2022-02-06
+#### Changed
++ Dependencies:
+    + certifi to 2021.10.8
+    + requests to 2.27.1
+    + urllib3 to 1.26.8
+    + idna to 3.3
+    + removed mkdocs, mike, mkapi
++ CI moved from Travis to Github-Actions
+    + added Python 3.10
+
+### [0.1.1] - 2020-10-30
+#### Fixed
++ pyproject.toml python 3.9 compatibility added
++ default py 3.8 env
+#### Changed
++ urllib3 bump from 1.25.10 to 1.25.11
 
 ## References
 
 + [Apache Solr Reference Guide](https://lucene.apache.org/solr/guide/8_6/)
 + [pysolr](https://pypi.org/project/pysolr/)
+
+
+[0.2.0]
