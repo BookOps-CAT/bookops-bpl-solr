@@ -112,4 +112,5 @@ with SolrSession(authorization="your_client_key", endpoint="solr_endpoint") as s
 + [pysolr](https://pypi.org/project/pysolr/)
 
 
-[0.2.0]
+[0.2.0]: https://github.com/BookOps-CAT/bookops-bpl-solr/compare/v0.1.1...v0.2.0
+[0.1.1]: https://github.com/BookOps-CAT/bookops-bpl-solr/compare/v0.1.0...v0.1.1
