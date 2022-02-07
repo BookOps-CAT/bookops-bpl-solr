@@ -99,6 +99,13 @@ with SolrSession(authorization="your_client_key", endpoint="solr_endpoint") as s
 + CI moved from Travis to Github-Actions
     + added Python 3.10
 
+### [0.1.1] - 2020-10-30
+#### Fixed
++ pyproject.toml python 3.9 compatibility added
++ default py 3.8 env
+#### Changed
++ urllib3 bump from 1.25.10 to 1.25.11
+
 ## References
 
 + [Apache Solr Reference Guide](https://lucene.apache.org/solr/guide/8_6/)
