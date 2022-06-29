@@ -128,7 +128,7 @@ class SolrSession(requests.Session):
 
     def _send_request(
         self, payload: Dict = None, hooks: Dict = None
-    ) -> Type[requests.Response]:
+    ) -> requests.Response:
         """
         Prepares and sends GET request with given parameters (payload) to BPL Solr.
         Private method but can be used for ad hoc searches not provided in SolrSession
@@ -178,7 +178,7 @@ class SolrSession(requests.Session):
         default_response_fields: bool = True,
         response_fields: Union[str, List[str]] = None,
         hooks: Dict = None,
-    ) -> Type[requests.Response]:
+    ) -> requests.Response:
         """
         Retrieves documents with matching id (Sierra bib #)
 
@@ -217,13 +217,43 @@ class SolrSession(requests.Session):
 
         return response
 
+    def search_controlNo(
+        self,
+        keyword: str,
+        default_response_fields: Union[str, List[str]] = None,
+        response_fields: Union[str, List[str]] = None,
+        hooks: Dict = None,
+    ) -> requests.Response:
+        """
+        Retrieves documents with matching control number (001 MARC tag).
+
+        Args:
+            keyword:                    control number as str
+            default_response_fields:    when True returns only predetermined fields,
+                                        when False returns all fields unless specified
+                                        in `response_fields` argument
+            response_fields:            fields to be returned as comma separated string,
+                                        or a list of strings
+            hooks:                      Requests library hook system that can be
+                                        used for signal event handling, see more at:
+                                        https://requests.readthedocs.io/en/master/user/advanced/#event-hooks
+
+        Returns:
+            `requests.Response` object
+        """
+        if not isinstance(keyword, str):
+            raise BookopsSolrError("Control number keyword must be a string.")
+
+        if not keyword:
+            raise BookopsSolrError("Provided empty string as control number keyword.")
+
     def search_isbns(
         self,
         keywords: List[str],
         default_response_fields: bool = True,
         response_fields: Union[str, List[str]] = None,
         hooks: Dict = None,
-    ) -> Type[requests.Response]:
+    ) -> requests.Response:
         """
         Retrieves documents with matching ISBNs.
 
@@ -242,11 +272,11 @@ class SolrSession(requests.Session):
             `requests.Response` object
         """
 
-        if type(keywords) is not list:
+        if not isinstance(keywords, list):
             raise BookopsSolrError("ISBN keywords argument must be a list.")
 
         if not keywords:
-            raise BookopsSolrError("Missing keywords argument.")
+            raise BookopsSolrError("ISBN keywords argument is an empty list.")
 
         # prep multiple ISBNs
         keywords = " OR ".join(keywords)
@@ -271,7 +301,7 @@ class SolrSession(requests.Session):
         default_response_fields: bool = True,
         response_fields: Union[str, List[str]] = None,
         hooks: Dict = None,
-    ) -> Type[requests.Response]:
+    ) -> requests.Response:
         """
         Retrieves documents with matching reserve ID
 
@@ -290,7 +320,7 @@ class SolrSession(requests.Session):
             `requests.Response` object
         """
 
-        if type(keyword) is not str:
+        if not isinstance(keyword, str):
             raise BookopsSolrError("Reserve id keyword argument must be a string.")
 
         if not keyword:
@@ -314,7 +344,7 @@ class SolrSession(requests.Session):
         default_response_fields: bool = True,
         response_fields: Union[str, List[str]] = None,
         hooks: Dict = None,
-    ) -> Type[requests.Response]:
+    ) -> requests.Response:
         """
         Retrieves Overdrive e-content documents that expired and library has no longer
         access to.
