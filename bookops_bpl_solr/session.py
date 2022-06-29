@@ -247,6 +247,20 @@ class SolrSession(requests.Session):
         if not keyword:
             raise BookopsSolrError("Provided empty string as control number keyword.")
 
+        # determine if pass default, custom, or allow all fields in response
+        response_fields = self._determine_response_fields(
+            default_response_fields, response_fields
+        )
+
+        payload = {
+            "q": f"ss_marc_tag_001:{keyword}",
+            "fl": response_fields,
+        }
+
+        response = self._send_request(payload, hooks)
+
+        return response
+
     def search_isbns(
         self,
         keywords: List[str],

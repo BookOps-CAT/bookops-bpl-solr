@@ -399,6 +399,18 @@ class TestSolrSessionLiveService:
             assert response.json()["response"]["numFound"] == 1
             assert response.json()["response"]["docs"][0]["id"] == "10000017"
 
+    def test_search_controlNo(self, live_key):
+        with SolrSession(
+            authorization=live_key.client_key, endpoint=live_key.endpoint
+        ) as session:
+            response = session.search_controlNo("200800068")
+            assert response.status_code == 200
+            assert (
+                response.url
+                == "https://www.bklynlibrary.org/solr/api/select/?rows=10&fq=ss_type%3Acatalog&q=ss_marc_tag_001%3A200800068"
+            )
+            assert response.json()["response"]["docs"][0]["id"] == "11499389"
+
     def test_search_isbns(self, live_key):
         with SolrSession(
             authorization=live_key.client_key, endpoint=live_key.endpoint
