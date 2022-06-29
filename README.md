@@ -9,7 +9,7 @@ Requires credentials from BPL WebApps.
 
 ## version
 
-> 0.2.0
+> 0.3.0
 
 ## Instalation
 Install via pip:
@@ -98,9 +98,18 @@ with SolrSession(authorization="your_client_key", endpoint="solr_endpoint") as s
 #### Fixed
 + typing errors in `session.py`
 
+### [0.3.0] - 2022-06-28
+#### Adds
++ search_controlNo() to query by control number (MARC 001 tag)
++ search_upcs() to query by UPC number (MARC 024 tag)
++ dev dependencies:
+    + mypy (0.961)
+    + types-requests (2.28.0)
++ fixes typing
+
 ### [0.2.0] - 2022-02-06
 #### Changed
-+ Dependencies:
++ dependencies:
     + certifi to 2021.10.8
     + requests to 2.27.1
     + urllib3 to 1.26.8
@@ -124,3 +133,4 @@ with SolrSession(authorization="your_client_key", endpoint="solr_endpoint") as s
 [0.3.0]: https://github.com/BookOps-CAT/bookops-bpl-solr/compare/v0.2.0...v0.3.0
 [0.2.0]: https://github.com/BookOps-CAT/bookops-bpl-solr/compare/v0.1.1...v0.2.0
 [0.1.1]: https://github.com/BookOps-CAT/bookops-bpl-solr/compare/v0.1.0...v0.1.1
+[0.3.0]: https://github.com/BookOps-CAT/bookops-bpl-solr/compare/v0.2.0...v0.3.0

@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "bookops-bpl-solr"
-version = "0.2.0"
+version = "0.3.0"
 description = "BookOps Python wrapper around BPL Solr service."
 license = "MIT"
 authors = ["Tomasz Kalata <klingaroo@gmail.com>"]
@@ -17,6 +17,8 @@ pytest = "^6.1.1"
 pytest-mock = "^3.3.1"
 pytest-cov = "^2.10.1"
 black = "^22.1.0"
+mypy = "^0.961"
+types-requests = "^2.28.0"
 
 [tool.black]
 line-length = 88
