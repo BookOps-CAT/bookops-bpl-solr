@@ -98,15 +98,6 @@ with SolrSession(authorization="your_client_key", endpoint="solr_endpoint") as s
 #### Fixed
 + typing errors in `session.py`
 
-### [0.3.0] - 2022-06-28
-#### Adds
-+ search_controlNo() to query by control number (MARC 001 tag)
-+ search_upcs() to query by UPC number (MARC 024 tag)
-+ dev dependencies:
-    + mypy (0.961)
-    + types-requests (2.28.0)
-+ fixes typing
-
 ### [0.2.0] - 2022-02-06
 #### Changed
 + dependencies:
