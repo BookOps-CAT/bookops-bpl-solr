@@ -109,10 +109,10 @@ class SolrSession(requests.Session):
         """
         err_msg = "Invalid Sierra bib number passed."
 
-        if type(bid) is int:
+        if isinstance(bid, int):
             bid = str(bid).strip()
 
-        if "b" == bid.lower()[0]:
+        if bid.lower()[0] == "b":
             bid = bid[1:]
         if len(bid) == 8:
             if not bid.isdigit():
@@ -293,7 +293,7 @@ class SolrSession(requests.Session):
             raise BookopsSolrError("ISBN keywords argument is an empty list.")
 
         # prep multiple ISBNs
-        keywords = " OR ".join(keywords)
+        keywords_str = " OR ".join(keywords)
 
         # determine if pass default, custom, or allow all fields in response
         response_fields = self._determine_response_fields(
@@ -301,7 +301,7 @@ class SolrSession(requests.Session):
         )
 
         payload = {
-            "q": f"isbn:{keywords}",
+            "q": f"isbn:{keywords_str}",
             "fl": response_fields,
         }
 
@@ -383,7 +383,7 @@ class SolrSession(requests.Session):
             raise BookopsSolrError("UPC keywords argument is an empty list.")
 
         # prep multiple UPCs
-        keywords = " OR ".join(keywords)
+        keywords_str = " OR ".join(keywords)
 
         # determine if pass default, custom, or allow all fields in response
         response_fields = self._determine_response_fields(
@@ -391,7 +391,7 @@ class SolrSession(requests.Session):
         )
 
         payload = {
-            "q": f"sm_marc_tag_024_a:{keywords}",
+            "q": f"sm_marc_tag_024_a:{keywords_str}",
             "fl": response_fields,
         }
 
