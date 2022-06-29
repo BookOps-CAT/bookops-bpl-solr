@@ -87,6 +87,16 @@ with SolrSession(authorization="your_client_key", endpoint="solr_endpoint") as s
 ```
 
 ## Changelog
+### [0.3.0] - 2022-06-28
+#### Added
++ `search_controlNo()` to query by control number (MARC 001 tag)
++ `search_upcs()` to query by UPC number (MARC 024 tag)
++ dev dependencies:
+    + mypy (0.961)
+    + types-requests (2.28.0)
+
+#### Fixed
++ typing errors in `session.py`
 
 ### [0.2.0] - 2022-02-06
 #### Changed
@@ -111,6 +121,6 @@ with SolrSession(authorization="your_client_key", endpoint="solr_endpoint") as s
 + [Apache Solr Reference Guide](https://lucene.apache.org/solr/guide/8_6/)
 + [pysolr](https://pypi.org/project/pysolr/)
 
-
+[0.3.0]: https://github.com/BookOps-CAT/bookops-bpl-solr/compare/v0.2.0...v0.3.0
 [0.2.0]: https://github.com/BookOps-CAT/bookops-bpl-solr/compare/v0.1.1...v0.2.0
 [0.1.1]: https://github.com/BookOps-CAT/bookops-bpl-solr/compare/v0.1.0...v0.1.1
