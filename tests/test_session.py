@@ -210,6 +210,22 @@ class TestSolrSession:
 
         assert "Provided empty string as control number keyword." in str(exc.value)
 
+    def test_search_controlNo_timeout(self, stub_session, mock_timeout):
+        with pytest.raises(BookopsSolrError):
+            stub_session.search_controlNo("123456789")
+
+    def test_search_controlNo_connection_error(
+        self, stub_session, mock_connectionerror
+    ):
+        with pytest.raises(BookopsSolrError):
+            stub_session.search_controlNo("123456789")
+
+    def test_search_controlNo_unexpected_error(
+        self, stub_session, mock_unexpected_error
+    ):
+        with pytest.raises(BookopsSolrError):
+            stub_session.search_controlNo("123456789")
+
     def test_search_isbns_success(
         self, stub_session, mock_successful_session_get_response
     ):
@@ -275,6 +291,37 @@ class TestSolrSession:
     ):
         with pytest.raises(BookopsSolrError):
             stub_session.search_reserveId("some_string")
+
+    def test_search_upcs_success(
+        self, stub_session, mock_successful_session_get_response
+    ):
+        response = stub_session.search_upcs(["9781680502404"])
+        assert response.status_code == 200
+
+    @pytest.mark.parametrize("arg", [None, ""])
+    def test_search_upcs_invalid_keywords_type(self, stub_session, arg):
+        err_msg = "UPC keywords argument must be a list."
+        with pytest.raises(BookopsSolrError) as exc:
+            stub_session.search_upcs(arg)
+        assert err_msg in str(exc.value)
+
+    def test_search_upcs_empty_list(self, stub_session):
+        err_msg = "UPC keywords argument is an empty list."
+        with pytest.raises(BookopsSolrError) as exc:
+            stub_session.search_upcs([])
+        assert err_msg in str(exc.value)
+
+    def test_search_upcs_timeout(self, stub_session, mock_timeout):
+        with pytest.raises(BookopsSolrError):
+            stub_session.search_upcs(["9781680502404"])
+
+    def test_search_upcs_connection_error(self, stub_session, mock_connectionerror):
+        with pytest.raises(BookopsSolrError):
+            stub_session.search_upcs(["9781680502404"])
+
+    def test_search_upcs_unexpected_error(self, stub_session, mock_unexpected_error):
+        with pytest.raises(BookopsSolrError):
+            stub_session.search_upcs(["9781680502404"])
 
     def test_find_expired_econtent_success(
         self, stub_session, mock_successful_session_get_response
@@ -456,6 +503,19 @@ class TestSolrSessionLiveService:
                 response.url
                 == "https://www.bklynlibrary.org/solr/api/select/?rows=10&fq=ss_type%3Acatalog&q=econtrolnumber%3A8CD53ED9-CEBD-4F78-8BEF-20A58F6F3857&fl=id%2Ctitle%2Cauthor_raw%2CpublishYear%2Ccreated_date%2Cmaterial_type%2Ccall_number%2Cisbn%2Clanguage%2Ceprovider%2Cecontrolnumber%2Ceurl%2Cdigital_avail_type%2Cdigital_copies_owned"
             )
+
+    def test_search_upcs(self, live_key):
+        with SolrSession(
+            authorization=live_key.client_key, endpoint=live_key.endpoint
+        ) as session:
+            response = session.search_upcs(["085391200390"])
+
+            assert response.status_code == 200
+            assert (
+                response.url
+                == "https://www.bklynlibrary.org/solr/api/select/?rows=10&fq=ss_type%3Acatalog&q=sm_marc_tag_024_a%3A085391200390&fl=id%2Ctitle%2Cauthor_raw%2CpublishYear%2Ccreated_date%2Cmaterial_type%2Ccall_number%2Cisbn%2Clanguage%2Ceprovider%2Cecontrolnumber%2Ceurl%2Cdigital_avail_type%2Cdigital_copies_owned"
+            )
+            assert response.json()["response"]["docs"][0]["id"] == "11499389"
 
     @pytest.mark.parametrize("arg1,arg2", [(5, 0), (5, 1), (3, 2)])
     def test_find_expired_econtent(self, arg1, arg2, live_key):
