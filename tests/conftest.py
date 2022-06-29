@@ -4,6 +4,9 @@ import requests
 import pytest
 
 
+from bookops_bpl_solr import SolrSession
+
+
 class MockUnexpectedException:
     def __init__(self, *args, **kwargs):
         raise Exception
@@ -53,6 +56,12 @@ def default_payload():
         "rows": 10,
         "fq": "ss_type:catalog",
     }
+
+
+@pytest.fixture
+def stub_session():
+    with SolrSession(authorization="my_client_key", endpoint="url_here") as session:
+        return session
 
 
 @pytest.fixture
