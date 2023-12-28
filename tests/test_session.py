@@ -450,11 +450,11 @@ class TestSolrSessionLiveService:
         with SolrSession(
             authorization=live_key.client_key, endpoint=live_key.endpoint
         ) as session:
-            response = session.search_controlNo("200800068")
+            response = session.search_controlNo("ocn437048096")
             assert response.status_code == 200
             assert (
                 response.url
-                == "https://www.bklynlibrary.org/solr/api/select/?rows=10&fq=ss_type%3Acatalog&q=ss_marc_tag_001%3A200800068"
+                == "https://www.bklynlibrary.org/solr/api/select/?rows=10&fq=ss_type%3Acatalog&q=ss_marc_tag_001%3Aocn437048096"
             )
             assert response.json()["response"]["docs"][0]["id"] == "11499389"
 

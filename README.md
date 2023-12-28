@@ -3,13 +3,13 @@
 # bookops-bpl-solr client
 BookOps Python wrapper around BPL Solr service.
 
-Requires Python 3.7 & up.
+Requires Python 3.8 & up.
 Requires credentials from BPL WebApps.
 
 
 ## version
 
-> 0.3.0
+> 0.4.0
 
 ## Instalation
 Install via pip:
@@ -87,6 +87,34 @@ with SolrSession(authorization="your_client_key", endpoint="solr_endpoint") as s
 ```
 
 ## Changelog
+
+### [0.4.0] - 2023-12-28
+#### Added
++ dev dependencies:
+    + exceptiongroup (1.2.0)
+#### Changed
++ dependencies:
+    + python 3.8
+    + requests (2.27.1)
++ dev dependencies:
+    + black (22.12.0)
+    + pytest (7.4.3)
+    + pytest-cov (4.1.0)
+    + pytest-mock (3.12.0)
++ `test_search_controlNo()` edited with updated control numbers 
++ `conftest.py` path to credentials
+
+#### Removed
+ + dev dependencies:
+    + atomicwrites
+    + attrs
+    + ghp-import
+    + importlib-metadata
+    + py
+    + toml
+    + typed-ast
+    + zipp
+
 ### [0.3.0] - 2022-06-28
 #### Added
 + `search_controlNo()` to query by control number (MARC 001 tag)
@@ -125,3 +153,4 @@ with SolrSession(authorization="your_client_key", endpoint="solr_endpoint") as s
 [0.2.0]: https://github.com/BookOps-CAT/bookops-bpl-solr/compare/v0.1.1...v0.2.0
 [0.1.1]: https://github.com/BookOps-CAT/bookops-bpl-solr/compare/v0.1.0...v0.1.1
 [0.3.0]: https://github.com/BookOps-CAT/bookops-bpl-solr/compare/v0.2.0...v0.3.0
+[0.4.0]: https://github.com/BookOps-CAT/bookops-bpl-solr/compare/v0.3.0...v0.4.0
