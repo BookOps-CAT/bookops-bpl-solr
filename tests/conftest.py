@@ -75,9 +75,8 @@ def live_key():
     from collections import namedtuple
 
     if os.name == "nt":
-
         Cred = namedtuple("Cred", ["endpoint", "client_key"])
-        fh = os.path.join(os.environ["USERPROFILE"], ".bpl-solr/bpl-solr-prod.json")
+        fh = os.path.join(os.environ["USERPROFILE"], ".cred/.solr/bpl-solr-prod.json")
         with open(fh, "r") as file:
             cred = json.load(file)
             return Cred(cred["endpoint"], cred["client_key"])
