@@ -25,7 +25,6 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN}}
   finish:
     needs: test
-    if: $
     runs-on: ubuntu-latest
     steps:
       - name: Coveralls Finished
