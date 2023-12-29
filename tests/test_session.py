@@ -389,7 +389,7 @@ class TestSolrSessionLiveService:
             assert response.status_code == 200
             assert (
                 response.url
-                == "https://www.bklynlibrary.org/solr/api/select/?rows=2&fq=ss_type%3Acatalog&fq=material_type%3ABook&q=title%3Acivil+AND+war"
+                == "https://www.bklynlibrary.org/solr/api/select/?rows=2&fq=ss_type%3Acatalog&fq=material_type%3ABook&q=title%3Acivil+AND+war"  # noqa: E501
             )
 
     def test_search_bibNo(self, live_key):
