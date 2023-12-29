@@ -381,8 +381,7 @@ class TestSolrSessionLiveService:
         ) as session:
             payload = {
                 "q": "title:civil AND war",
-                "fq": "ss_type:catalog",
-                "fq": "material_type:Book",
+                "fq": ["ss_type:catalog", "material_type:Book"],
                 "rows": 2,
             }
             response = session._send_request(payload)
@@ -390,7 +389,7 @@ class TestSolrSessionLiveService:
             assert response.status_code == 200
             assert (
                 response.url
-                == "https://www.bklynlibrary.org/solr/api/select/?rows=2&fq=material_type%3ABook&q=title%3Acivil+AND+war"
+                == "https://www.bklynlibrary.org/solr/api/select/?rows=2&fq=ss_type%3Acatalog&fq=material_type%3ABook&q=title%3Acivil+AND+war"
             )
 
     def test_search_bibNo(self, live_key):
