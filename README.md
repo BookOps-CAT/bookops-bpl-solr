@@ -88,14 +88,16 @@ with SolrSession(authorization="your_client_key", endpoint="solr_endpoint") as s
 
 ## Changelog
 
-### [0.4.0] - 2023-12-28
+### [0.4.0] - 2024-1-2
 #### Added
 + dev dependencies:
     + exceptiongroup (1.2.0)
+  
 #### Changed
 + dependencies:
     + python 3.8
-    + requests (2.27.1)
+    + requests (2.31.0)
+    + certifi (2023.11.17)
 + dev dependencies:
     + black (22.12.0)
     + pytest (7.4.3)
@@ -103,6 +105,15 @@ with SolrSession(authorization="your_client_key", endpoint="solr_endpoint") as s
     + pytest-mock (3.12.0)
 + `test_search_controlNo()` edited with updated control numbers 
 + `conftest.py` path to credentials
++ `coverage` configuration moved from `.coveragerc` to `pyproject.toml`
++ `master` branch renamed to `main`
++ GitHub-Actions updated 
+    + checkout and setup-python actions upgraded to v4
+    + tests triggered only on push to main and PR to main
+    + Python 3.11 and 3.12 added to tests
+
+#### Fixed
++ corrected application of two filters (`fq`) in live test request so both filters are used in a query
 
 #### Removed
  + dev dependencies:

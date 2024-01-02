@@ -156,7 +156,7 @@ class SolrSession(requests.Session):
             response = session._search(payload)
         """
 
-        if type(payload) is not dict or not payload:
+        if not isinstance(payload, dict) or not payload:
             raise BookopsSolrError("Missing or invalid payload argument.")
 
         payload = self._merge_with_payload_defaults(payload)
