@@ -6,4 +6,4 @@ def test_version():
 
 
 def test_SolrSession_top_import():
-    from bookops_bpl_solr import SolrSession
+    from bookops_bpl_solr import SolrSession  # noqa: F401
