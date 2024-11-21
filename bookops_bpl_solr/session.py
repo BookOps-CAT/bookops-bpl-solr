@@ -5,8 +5,7 @@ This module provides SolrSession class for requests to BPL Solr platform
 """
 
 import sys
-from typing import Dict, List, Tuple, Type, Union
-import warnings
+from typing import Dict, List, Tuple, Union
 
 import requests
 
@@ -39,7 +38,7 @@ class SolrSession(requests.Session):
             timeout:                how long to wait for server to send data before
                                     giving up; default value is 3 seconds
         """
-        requests.Session.__init__(self)
+        super().__init__()
 
         self.authorization = authorization
         self.endpoint = endpoint
