@@ -22,6 +22,23 @@ class SolrSession(requests.Session):
     A session class that wraps requests to BPL Solr platform.
     """
 
+    DEFAULT_RESPONSE_FIELDS = [
+        "id",
+        "title",
+        "author_raw",
+        "publishYear",
+        "created_date",
+        "material_type",
+        "call_number",
+        "isbn",
+        "language",
+        "eprovider",
+        "econtrolnumber",
+        "eurl",
+        "digital_avail_type",
+        "digital_copies_owned",
+    ]
+
     def __init__(
         self,
         authorization: str,
@@ -68,12 +85,16 @@ class SolrSession(requests.Session):
         self.headers.update({"Client-Key": self.authorization})
         self.headers.update({"User-Agent": self.agent})
 
-    def _determine_response_fields(self, default_response_fields, response_fields):
+    def _determine_response_fields(
+        self,
+        default_response_fields: bool,
+        response_fields: Union[str, List[str], None],
+    ) -> Union[str, None]:
+        """Determines which fields to return in the response"""
         if default_response_fields:
-            response_fields = "id,title,author_raw,publishYear,created_date,material_type,call_number,isbn,language,eprovider,econtrolnumber,eurl,digital_avail_type,digital_copies_owned"
-        else:
-            if response_fields:
-                response_fields = self._prep_response_fields(response_fields)
+            response_fields = self._prep_response_fields(self.DEFAULT_RESPONSE_FIELDS)
+        elif response_fields is not None and not default_response_fields:
+            response_fields = self._prep_response_fields(response_fields)
         return response_fields
 
     def _merge_with_payload_defaults(self, payload: Dict) -> Dict:
