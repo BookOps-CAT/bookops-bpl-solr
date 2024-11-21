@@ -5,7 +5,7 @@ This module provides SolrSession class for requests to BPL Solr platform
 """
 
 import sys
-from typing import Dict, List, Tuple, Union
+from typing import Dict, List, Optional, Tuple, Union
 
 import requests
 
@@ -26,13 +26,16 @@ class SolrSession(requests.Session):
         self,
         authorization: str,
         endpoint: str,
-        agent: str = None,
-        timeout: Union[int, float, Tuple[int, int], Tuple[float, float]] = None,
+        agent: Optional[str] = None,
+        timeout: Union[int, float, Tuple[int, int], Tuple[float, float], None] = (
+            3,
+            3,
+        ),
     ):
         """
         Args:
             authorization:          Client-Key
-            endopint:               endpoint's URL
+            endpoint:               endpoint's URL
             agent:                  "User-agent" parameter to be passed in the request
                                     header; usage strongly encouraged
             timeout:                how long to wait for server to send data before
@@ -46,19 +49,19 @@ class SolrSession(requests.Session):
         self.timeout = timeout
 
         # validate passed arguments
-        if type(self.authorization) is not str or not self.authorization:
+        if not isinstance(self.authorization, str) or not self.authorization:
             raise BookopsSolrError(
                 "Invalid authorization. Argument must be a Client-Key string."
             )
 
-        if type(self.endpoint) is not str or not self.endpoint:
+        if not isinstance(self.endpoint, str) or not self.endpoint:
             raise BookopsSolrError(
                 "Invalid endpoint argument. It must be a Client-Key string."
             )
 
         if not self.agent:
             self.agent = f"{__title__}/{__version__}"
-        elif type(self.agent) is not str:
+        elif not isinstance(self.agent, str):
             raise BookopsSolrError("Invalid type of an agent argument.")
 
         # set session headers
@@ -89,9 +92,9 @@ class SolrSession(requests.Session):
         """
         Formats as comma separated string response fields passed as a list
         """
-        if type(response_fields) is list:
+        if isinstance(response_fields, list):
             return ",".join(response_fields)
-        elif type(response_fields) is str:
+        elif isinstance(response_fields, str):
             return response_fields
         else:
             raise BookopsSolrError("Invalid type of 'reposponse_format' argument.")
@@ -427,7 +430,7 @@ class SolrSession(requests.Session):
             `requests.Response` object
         """
 
-        if type(rows) is not int or type(result_page) is not int:
+        if not isinstance(rows, int) or not isinstance(result_page, int):
             raise BookopsSolrError("Invalid type of arguments passed.")
 
         if rows < 1 or rows > 100:
