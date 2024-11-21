@@ -129,7 +129,7 @@ class SolrSession(requests.Session):
         return bid
 
     def _send_request(
-        self, payload: Dict = None, hooks: Dict = None
+        self, payload: Optional[Dict] = None, hooks: Optional[Dict] = None
     ) -> requests.Response:
         """
         Prepares and sends GET request with given parameters (payload) to BPL Solr.
@@ -178,8 +178,8 @@ class SolrSession(requests.Session):
         self,
         keyword: Union[str, int],
         default_response_fields: bool = True,
-        response_fields: Union[str, List[str]] = None,
-        hooks: Dict = None,
+        response_fields: Union[str, List[str], None] = None,
+        hooks: Optional[Dict] = None,
     ) -> requests.Response:
         """
         Retrieves documents with matching id (Sierra bib #)
@@ -222,9 +222,9 @@ class SolrSession(requests.Session):
     def search_controlNo(
         self,
         keyword: str,
-        default_response_fields: Union[str, List[str]] = None,
-        response_fields: Union[str, List[str]] = None,
-        hooks: Dict = None,
+        default_response_fields: bool = True,
+        response_fields: Union[str, List[str], None] = None,
+        hooks: Optional[Dict] = None,
     ) -> requests.Response:
         """
         Retrieves documents with matching control number (001 MARC tag).
@@ -267,8 +267,8 @@ class SolrSession(requests.Session):
         self,
         keywords: List[str],
         default_response_fields: bool = True,
-        response_fields: Union[str, List[str]] = None,
-        hooks: Dict = None,
+        response_fields: Union[str, List[str], None] = None,
+        hooks: Optional[Dict] = None,
     ) -> requests.Response:
         """
         Retrieves documents with matching ISBNs.
@@ -315,8 +315,8 @@ class SolrSession(requests.Session):
         self,
         keyword: str,
         default_response_fields: bool = True,
-        response_fields: Union[str, List[str]] = None,
-        hooks: Dict = None,
+        response_fields: Union[str, List[str], None] = None,
+        hooks: Optional[Dict] = None,
     ) -> requests.Response:
         """
         Retrieves documents with matching reserve ID
@@ -357,8 +357,8 @@ class SolrSession(requests.Session):
         self,
         keywords: List[str],
         default_response_fields: bool = True,
-        response_fields: Union[str, List[str]] = None,
-        hooks: Dict = None,
+        response_fields: Union[str, List[str], None] = None,
+        hooks: Optional[Dict] = None,
     ) -> requests.Response:
         """
         Retrieves documents with matching UPCs.
@@ -406,8 +406,8 @@ class SolrSession(requests.Session):
         rows: int = 50,
         result_page: int = 0,
         default_response_fields: bool = True,
-        response_fields: Union[str, List[str]] = None,
-        hooks: Dict = None,
+        response_fields: Union[str, List[str], None] = None,
+        hooks: Optional[Dict] = None,
     ) -> requests.Response:
         """
         Retrieves Overdrive e-content documents that expired and library has no longer
