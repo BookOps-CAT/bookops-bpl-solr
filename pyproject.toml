@@ -3,7 +3,7 @@ name = "bookops-bpl-solr"
 version = "0.4.0"
 description = "BookOps Python wrapper around BPL Solr service."
 license = "MIT"
-authors = ["Tomasz Kalata <klingaroo@gmail.com>"]
+authors = ["Tomasz Kalata <klingaroo@gmail.com>", "Charlotte Kostelic <charlottekostelic@gmail.com>"]
 readme = "README.md"
 
 keywords = ["api", "cataloging", "bibliographic records", "library metadata", "bpl"]
