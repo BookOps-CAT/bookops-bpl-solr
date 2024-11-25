@@ -1,9 +1,9 @@
 [tool.poetry]
 name = "bookops-bpl-solr"
-version = "0.4.0"
+version = "0.5.0"
 description = "BookOps Python wrapper around BPL Solr service."
 license = "MIT"
-authors = ["Tomasz Kalata <klingaroo@gmail.com>"]
+authors = ["Tomasz Kalata <klingaroo@gmail.com>", "Charlotte Kostelic <charlottekostelic@gmail.com>"]
 readme = "README.md"
 
 keywords = ["api", "cataloging", "bibliographic records", "library metadata", "bpl"]
@@ -19,6 +19,12 @@ pytest-mock = "^3.12.0"
 black = "^22.1.0"
 mypy = "^0.961"
 types-requests = "^2.28.0"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+markers = [
+	"webtest: marks a test hitting live endpoint",
+]
 
 [tool.coverage.run]
 relative_files = true

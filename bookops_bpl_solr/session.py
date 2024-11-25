@@ -5,8 +5,7 @@ This module provides SolrSession class for requests to BPL Solr platform
 """
 
 import sys
-from typing import Dict, List, Tuple, Type, Union
-import warnings
+from typing import Dict, List, Optional, Tuple, Union
 
 import requests
 
@@ -23,23 +22,43 @@ class SolrSession(requests.Session):
     A session class that wraps requests to BPL Solr platform.
     """
 
+    DEFAULT_RESPONSE_FIELDS = [
+        "id",
+        "title",
+        "author_raw",
+        "publishYear",
+        "created_date",
+        "material_type",
+        "call_number",
+        "isbn",
+        "language",
+        "eprovider",
+        "econtrolnumber",
+        "eurl",
+        "digital_avail_type",
+        "digital_copies_owned",
+    ]
+
     def __init__(
         self,
         authorization: str,
         endpoint: str,
-        agent: str = None,
-        timeout: Union[int, float, Tuple[int, int], Tuple[float, float]] = None,
+        agent: Optional[str] = None,
+        timeout: Union[int, float, Tuple[int, int], Tuple[float, float], None] = (
+            3,
+            3,
+        ),
     ):
         """
         Args:
             authorization:          Client-Key
-            endopint:               endpoint's URL
+            endpoint:               endpoint's URL
             agent:                  "User-agent" parameter to be passed in the request
                                     header; usage strongly encouraged
             timeout:                how long to wait for server to send data before
                                     giving up; default value is 3 seconds
         """
-        requests.Session.__init__(self)
+        super().__init__()
 
         self.authorization = authorization
         self.endpoint = endpoint
@@ -47,31 +66,35 @@ class SolrSession(requests.Session):
         self.timeout = timeout
 
         # validate passed arguments
-        if type(self.authorization) is not str or not self.authorization:
+        if not isinstance(self.authorization, str) or not self.authorization:
             raise BookopsSolrError(
                 "Invalid authorization. Argument must be a Client-Key string."
             )
 
-        if type(self.endpoint) is not str or not self.endpoint:
+        if not isinstance(self.endpoint, str) or not self.endpoint:
             raise BookopsSolrError(
                 "Invalid endpoint argument. It must be a Client-Key string."
             )
 
         if not self.agent:
             self.agent = f"{__title__}/{__version__}"
-        elif type(self.agent) is not str:
+        elif not isinstance(self.agent, str):
             raise BookopsSolrError("Invalid type of an agent argument.")
 
         # set session headers
         self.headers.update({"Client-Key": self.authorization})
         self.headers.update({"User-Agent": self.agent})
 
-    def _determine_response_fields(self, default_response_fields, response_fields):
+    def _determine_response_fields(
+        self,
+        default_response_fields: bool,
+        response_fields: Union[str, List[str], None],
+    ) -> Union[str, None]:
+        """Determines which fields to return in the response"""
         if default_response_fields:
-            response_fields = "id,title,author_raw,publishYear,created_date,material_type,call_number,isbn,language,eprovider,econtrolnumber,eurl,digital_avail_type,digital_copies_owned"
-        else:
-            if response_fields:
-                response_fields = self._prep_response_fields(response_fields)
+            response_fields = self._prep_response_fields(self.DEFAULT_RESPONSE_FIELDS)
+        elif response_fields is not None and not default_response_fields:
+            response_fields = self._prep_response_fields(response_fields)
         return response_fields
 
     def _merge_with_payload_defaults(self, payload: Dict) -> Dict:
@@ -90,9 +113,9 @@ class SolrSession(requests.Session):
         """
         Formats as comma separated string response fields passed as a list
         """
-        if type(response_fields) is list:
+        if isinstance(response_fields, list):
             return ",".join(response_fields)
-        elif type(response_fields) is str:
+        elif isinstance(response_fields, str):
             return response_fields
         else:
             raise BookopsSolrError("Invalid type of 'reposponse_format' argument.")
@@ -127,7 +150,7 @@ class SolrSession(requests.Session):
         return bid
 
     def _send_request(
-        self, payload: Dict = None, hooks: Dict = None
+        self, payload: Optional[Dict] = None, hooks: Optional[Dict] = None
     ) -> requests.Response:
         """
         Prepares and sends GET request with given parameters (payload) to BPL Solr.
@@ -176,8 +199,8 @@ class SolrSession(requests.Session):
         self,
         keyword: Union[str, int],
         default_response_fields: bool = True,
-        response_fields: Union[str, List[str]] = None,
-        hooks: Dict = None,
+        response_fields: Union[str, List[str], None] = None,
+        hooks: Optional[Dict] = None,
     ) -> requests.Response:
         """
         Retrieves documents with matching id (Sierra bib #)
@@ -220,9 +243,9 @@ class SolrSession(requests.Session):
     def search_controlNo(
         self,
         keyword: str,
-        default_response_fields: Union[str, List[str]] = None,
-        response_fields: Union[str, List[str]] = None,
-        hooks: Dict = None,
+        default_response_fields: bool = True,
+        response_fields: Union[str, List[str], None] = None,
+        hooks: Optional[Dict] = None,
     ) -> requests.Response:
         """
         Retrieves documents with matching control number (001 MARC tag).
@@ -265,8 +288,8 @@ class SolrSession(requests.Session):
         self,
         keywords: List[str],
         default_response_fields: bool = True,
-        response_fields: Union[str, List[str]] = None,
-        hooks: Dict = None,
+        response_fields: Union[str, List[str], None] = None,
+        hooks: Optional[Dict] = None,
     ) -> requests.Response:
         """
         Retrieves documents with matching ISBNs.
@@ -313,8 +336,8 @@ class SolrSession(requests.Session):
         self,
         keyword: str,
         default_response_fields: bool = True,
-        response_fields: Union[str, List[str]] = None,
-        hooks: Dict = None,
+        response_fields: Union[str, List[str], None] = None,
+        hooks: Optional[Dict] = None,
     ) -> requests.Response:
         """
         Retrieves documents with matching reserve ID
@@ -355,8 +378,8 @@ class SolrSession(requests.Session):
         self,
         keywords: List[str],
         default_response_fields: bool = True,
-        response_fields: Union[str, List[str]] = None,
-        hooks: Dict = None,
+        response_fields: Union[str, List[str], None] = None,
+        hooks: Optional[Dict] = None,
     ) -> requests.Response:
         """
         Retrieves documents with matching UPCs.
@@ -404,8 +427,8 @@ class SolrSession(requests.Session):
         rows: int = 50,
         result_page: int = 0,
         default_response_fields: bool = True,
-        response_fields: Union[str, List[str]] = None,
-        hooks: Dict = None,
+        response_fields: Union[str, List[str], None] = None,
+        hooks: Optional[Dict] = None,
     ) -> requests.Response:
         """
         Retrieves Overdrive e-content documents that expired and library has no longer
@@ -428,7 +451,7 @@ class SolrSession(requests.Session):
             `requests.Response` object
         """
 
-        if type(rows) is not int or type(result_page) is not int:
+        if not isinstance(rows, int) or not isinstance(result_page, int):
             raise BookopsSolrError("Invalid type of arguments passed.")
 
         if rows < 1 or rows > 100:
