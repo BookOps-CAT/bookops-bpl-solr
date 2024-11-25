@@ -205,8 +205,9 @@ with SolrSession(authorization="your_client_key", endpoint="solr_endpoint") as s
 + [Apache Solr Reference Guide](https://lucene.apache.org/solr/guide/8_6/)
 + [pysolr](https://pypi.org/project/pysolr/)
 
+
+[0.5.0]: https://github.com/BookOps-CAT/bookops-bpl-solr/compare/v0.4.0...v0.5.0
+[0.4.0]: https://github.com/BookOps-CAT/bookops-bpl-solr/compare/v0.3.0...v0.4.0
 [0.3.0]: https://github.com/BookOps-CAT/bookops-bpl-solr/compare/v0.2.0...v0.3.0
 [0.2.0]: https://github.com/BookOps-CAT/bookops-bpl-solr/compare/v0.1.1...v0.2.0
 [0.1.1]: https://github.com/BookOps-CAT/bookops-bpl-solr/compare/v0.1.0...v0.1.1
-[0.3.0]: https://github.com/BookOps-CAT/bookops-bpl-solr/compare/v0.2.0...v0.3.0
-[0.4.0]: https://github.com/BookOps-CAT/bookops-bpl-solr/compare/v0.3.0...v0.4.0
