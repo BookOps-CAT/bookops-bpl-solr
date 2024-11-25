@@ -9,7 +9,7 @@ Requires credentials from BPL WebApps.
 
 ## version
 
-> 0.4.0
+> 0.5.0
 
 ## Instalation
 Install via pip:
