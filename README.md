@@ -88,6 +88,51 @@ with SolrSession(authorization="your_client_key", endpoint="solr_endpoint") as s
 
 ## Changelog
 
+### [0.5.0] - 2024-11-25
+#### Added
+ + type annotations where they were missing in `SolrSession` class and methods
+ + py.typed marker so applications using `bookops-bpl-solr` will use the annotations from this package
+ + Python 3.13 to GitHub Actions automated tests
+ + `BookopsSolrError` as top-level import per #8 
+
+#### Changed:
+ + implicit optional types changed to explicit optional types in `SolrSession`
+ + default value for `SolrSession.timeout` is now `(3,3,)` as specified in docstring
+ + changed `if type() is` syntax to `if isinstance()` in all type checks in `SolrSession`
+ + ignore Flake8 F401 errors in `__init__.py` and `test_bookops_bpl_solr.py`
+ + moved `pytest.ini_options` to `pyproject.toml` and removed `pytest.ini` file
+ + updated authors in `pyproject.toml` per #21 
+ + Updated dependencies:
+   + `certifi` (2024.8.30)
+   + `charset-normalizer` (3.4.0)
+   + `idna` (3.10)
+   + `requests` (2.32.3)
+   + `urllib3` (2.2.3)
+ + Updated dev depenencies:
+   + `click` (8.1.7)
+   + `colorama` (0.4.6)
+   + `coverage` (7.6.1)
+   + `exceptiongroup` (1.2.2)
+   + `iniconfig` (2.0.0)
+   + `mypy-extensions` (1.0.0)
+   + `packaging` (24.2)
+   + `pathspec` (0.12.1)
+   + `platformdirs` (4.3.6)
+   + `pluggy` (1.5.0)
+   + `pytest-mock` (3.14.0)
+   + `pytest` (7.4.4)
+   + `tomli` (2.1.0)
+   + `types-requests` (2.32.0.241016)
+   + `typing-extensions` (4.12.2)
+   + `urllib3` (2.2.3)
+
+#### Fixed
+ + type annotation error for `SolrSession.search_controlNo`. `default_response_fields` should be `bool` not `str` or `list`
+ + urls in responses of livetests
+
+#### Removed
+ + unused imports from `session.py`
+
 ### [0.4.0] - 2024-1-2
 #### Added
 + dev dependencies:
