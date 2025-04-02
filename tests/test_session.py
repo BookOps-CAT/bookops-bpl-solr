@@ -389,7 +389,7 @@ class TestSolrSessionLiveService:
             assert response.status_code == 200
             assert (
                 response.url
-                == "https://bklynlibrary.org/solr/api/select/?rows=2&fq=ss_type%3Acatalog&fq=material_type%3ABook&q=title%3Acivil+AND+war"  # noqa: E501
+                == "https://discover.bklynlibrary.org/api/select/index.php?rows=2&fq=ss_type%3Acatalog&fq=material_type%3ABook&q=title%3Acivil+AND+war"  # noqa: E501
             )
 
     def test_search_bibNo(self, live_key):
@@ -402,7 +402,7 @@ class TestSolrSessionLiveService:
             assert response.status_code == 200
             assert (
                 response.url
-                == "https://bklynlibrary.org/solr/api/select/?rows=10&fq=ss_type%3Acatalog&q=id%3A10000017&fl=id%2Ctitle%2Cauthor_raw%2CpublishYear%2Ccreated_date%2Cmaterial_type%2Ccall_number%2Cisbn%2Clanguage%2Ceprovider%2Cecontrolnumber%2Ceurl%2Cdigital_avail_type%2Cdigital_copies_owned"  # noqa: E501
+                == "https://discover.bklynlibrary.org/api/select/index.php?rows=10&fq=ss_type%3Acatalog&q=id%3A10000017&fl=id%2Ctitle%2Cauthor_raw%2CpublishYear%2Ccreated_date%2Cmaterial_type%2Ccall_number%2Cisbn%2Clanguage%2Ceprovider%2Cecontrolnumber%2Ceurl%2Cdigital_avail_type%2Cdigital_copies_owned"  # noqa: E501
             )
             assert response.json()["response"]["numFound"] == 1
             assert response.json()["response"]["docs"][0]["id"] == "10000017"
@@ -419,7 +419,7 @@ class TestSolrSessionLiveService:
             assert response.status_code == 200
             assert (
                 response.url
-                == "https://bklynlibrary.org/solr/api/select/?rows=10&fq=ss_type%3Acatalog&q=id%3A10000001&fl=id%2Ctitle"  # noqa: E501
+                == "https://discover.bklynlibrary.org/api/select/index.php?rows=10&fq=ss_type%3Acatalog&q=id%3A10000001&fl=id%2Ctitle"  # noqa: E501
             )
             assert response.json() == {
                 "response": {
@@ -440,7 +440,7 @@ class TestSolrSessionLiveService:
             assert response.status_code == 200
             assert (
                 response.url
-                == "https://bklynlibrary.org/solr/api/select/?rows=10&fq=ss_type%3Acatalog&q=id%3A10000017"  # noqa: E501
+                == "https://discover.bklynlibrary.org/api/select/index.php?rows=10&fq=ss_type%3Acatalog&q=id%3A10000017"  # noqa: E501
             )
             assert response.json()["response"]["numFound"] == 1
             assert response.json()["response"]["docs"][0]["id"] == "10000017"
@@ -453,7 +453,7 @@ class TestSolrSessionLiveService:
             assert response.status_code == 200
             assert (
                 response.url
-                == "https://bklynlibrary.org/solr/api/select/?rows=10&fq=ss_type%3Acatalog&q=ss_marc_tag_001%3Aocn437048096&fl=id%2Ctitle%2Cauthor_raw%2CpublishYear%2Ccreated_date%2Cmaterial_type%2Ccall_number%2Cisbn%2Clanguage%2Ceprovider%2Cecontrolnumber%2Ceurl%2Cdigital_avail_type%2Cdigital_copies_owned"  # noqa: E501
+                == "https://discover.bklynlibrary.org/api/select/index.php?rows=10&fq=ss_type%3Acatalog&q=ss_marc_tag_001%3Aocn437048096&fl=id%2Ctitle%2Cauthor_raw%2CpublishYear%2Ccreated_date%2Cmaterial_type%2Ccall_number%2Cisbn%2Clanguage%2Ceprovider%2Cecontrolnumber%2Ceurl%2Cdigital_avail_type%2Cdigital_copies_owned"  # noqa: E501
             )
             assert response.json()["response"]["docs"][0]["id"] == "11499389"
 
@@ -469,7 +469,7 @@ class TestSolrSessionLiveService:
             assert response.status_code == 200
             assert (
                 response.url
-                == "https://bklynlibrary.org/solr/api/select/?rows=10&fq=ss_type%3Acatalog&q=isbn%3A9780810984912+OR+9781419741890+OR+0810984911&fl=id%2Ctitle%2Cauthor_raw%2CpublishYear%2Ccreated_date%2Cmaterial_type%2Ccall_number%2Cisbn%2Clanguage%2Ceprovider%2Cecontrolnumber%2Ceurl%2Cdigital_avail_type%2Cdigital_copies_owned"  # noqa: E501
+                == "https://discover.bklynlibrary.org/api/select/index.php?rows=10&fq=ss_type%3Acatalog&q=isbn%3A9780810984912+OR+9781419741890+OR+0810984911&fl=id%2Ctitle%2Cauthor_raw%2CpublishYear%2Ccreated_date%2Cmaterial_type%2Ccall_number%2Cisbn%2Clanguage%2Ceprovider%2Cecontrolnumber%2Ceurl%2Cdigital_avail_type%2Cdigital_copies_owned"  # noqa: E501
             )
 
     def test_search_isbns_empty(self, live_key):
@@ -500,7 +500,7 @@ class TestSolrSessionLiveService:
             assert response.status_code == 200
             assert (
                 response.url
-                == "https://bklynlibrary.org/solr/api/select/?rows=10&fq=ss_type%3Acatalog&q=econtrolnumber%3A8CD53ED9-CEBD-4F78-8BEF-20A58F6F3857&fl=id%2Ctitle%2Cauthor_raw%2CpublishYear%2Ccreated_date%2Cmaterial_type%2Ccall_number%2Cisbn%2Clanguage%2Ceprovider%2Cecontrolnumber%2Ceurl%2Cdigital_avail_type%2Cdigital_copies_owned"  # noqa: E501
+                == "https://discover.bklynlibrary.org/api/select/index.php?rows=10&fq=ss_type%3Acatalog&q=econtrolnumber%3A8CD53ED9-CEBD-4F78-8BEF-20A58F6F3857&fl=id%2Ctitle%2Cauthor_raw%2CpublishYear%2Ccreated_date%2Cmaterial_type%2Ccall_number%2Cisbn%2Clanguage%2Ceprovider%2Cecontrolnumber%2Ceurl%2Cdigital_avail_type%2Cdigital_copies_owned"  # noqa: E501
             )
 
     def test_search_upcs(self, live_key):
@@ -512,7 +512,7 @@ class TestSolrSessionLiveService:
             assert response.status_code == 200
             assert (
                 response.url
-                == "https://bklynlibrary.org/solr/api/select/?rows=10&fq=ss_type%3Acatalog&q=sm_marc_tag_024_a%3A085391200390&fl=id%2Ctitle%2Cauthor_raw%2CpublishYear%2Ccreated_date%2Cmaterial_type%2Ccall_number%2Cisbn%2Clanguage%2Ceprovider%2Cecontrolnumber%2Ceurl%2Cdigital_avail_type%2Cdigital_copies_owned"  # noqa: E501
+                == "https://discover.bklynlibrary.org/api/select/index.php?rows=10&fq=ss_type%3Acatalog&q=sm_marc_tag_024_a%3A085391200390&fl=id%2Ctitle%2Cauthor_raw%2CpublishYear%2Ccreated_date%2Cmaterial_type%2Ccall_number%2Cisbn%2Clanguage%2Ceprovider%2Cecontrolnumber%2Ceurl%2Cdigital_avail_type%2Cdigital_copies_owned"  # noqa: E501
             )
             assert response.json()["response"]["docs"][0]["id"] == "11499389"
 
@@ -527,5 +527,5 @@ class TestSolrSessionLiveService:
             assert response.status_code == 200
             assert (
                 response.url
-                == f"https://bklynlibrary.org/solr/api/select/?rows={arg1}&fq=ss_type%3Acatalog&q=digital_copies_owned%3A0+AND+digital_avail_type%3ANormal&start={arg2}&fl=id%2Ctitle%2Cauthor_raw%2CpublishYear%2Ccreated_date%2Cmaterial_type%2Ccall_number%2Cisbn%2Clanguage%2Ceprovider%2Cecontrolnumber%2Ceurl%2Cdigital_avail_type%2Cdigital_copies_owned"  # noqa: E501
+                == f"https://discover.bklynlibrary.org/api/select/index.php?rows={arg1}&fq=ss_type%3Acatalog&q=digital_copies_owned%3A0+AND+digital_avail_type%3ANormal&start={arg2}&fl=id%2Ctitle%2Cauthor_raw%2CpublishYear%2Ccreated_date%2Cmaterial_type%2Ccall_number%2Cisbn%2Clanguage%2Ceprovider%2Cecontrolnumber%2Ceurl%2Cdigital_avail_type%2Cdigital_copies_owned"  # noqa: E501
             )

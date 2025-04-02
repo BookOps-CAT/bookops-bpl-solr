@@ -9,7 +9,7 @@ Requires credentials from BPL WebApps.
 
 ## version
 
-> 0.5.0
+> 0.6.0
 
 ## Instalation
 Install via pip:
@@ -87,6 +87,10 @@ with SolrSession(authorization="your_client_key", endpoint="solr_endpoint") as s
 ```
 
 ## Changelog
+
+### [0.6.0] - 2025-04-02
+#### Changed:
++ Updated webtests (integration tests) to the new BPL Solr endpoint
 
 ### [0.5.0] - 2024-11-25
 #### Added
@@ -206,6 +210,7 @@ with SolrSession(authorization="your_client_key", endpoint="solr_endpoint") as s
 + [pysolr](https://pypi.org/project/pysolr/)
 
 
+[0.6.0]: https://github.com/BookOps-CAT/bookops-bpl-solr/compare/v0.5.0...v0.6.0
 [0.5.0]: https://github.com/BookOps-CAT/bookops-bpl-solr/compare/v0.4.0...v0.5.0
 [0.4.0]: https://github.com/BookOps-CAT/bookops-bpl-solr/compare/v0.3.0...v0.4.0
 [0.3.0]: https://github.com/BookOps-CAT/bookops-bpl-solr/compare/v0.2.0...v0.3.0
