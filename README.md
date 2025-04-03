@@ -3,13 +3,13 @@
 # bookops-bpl-solr client
 BookOps Python wrapper around BPL Solr service.
 
-Requires Python 3.8 & up.
+Requires Python 3.12 & up.
 Requires credentials from BPL WebApps.
 
 
 ## version
 
-> 0.6.0
+> 0.6.1
 
 ## Instalation
 Install via pip:
@@ -88,6 +88,17 @@ with SolrSession(authorization="your_client_key", endpoint="solr_endpoint") as s
 
 ## Changelog
 
+### [0.6.1] - 2025-04-03
+#### Changed
+ + changed `pyproject.toml` configuration for dependencies
+ + updated dependencies:
+   + python 3.12
+   + pytest (8.3.5)
+   + pytest-cov (6.1.0)
+   + pytest-mock (3.14.0)
+   + mypy (1.15)
+   + black (25.1.0)
+
 ### [0.6.0] - 2025-04-02
 #### Changed:
 + Updated webtests (integration tests) to the new BPL Solr endpoint
@@ -106,7 +117,7 @@ with SolrSession(authorization="your_client_key", endpoint="solr_endpoint") as s
  + ignore Flake8 F401 errors in `__init__.py` and `test_bookops_bpl_solr.py`
  + moved `pytest.ini_options` to `pyproject.toml` and removed `pytest.ini` file
  + updated authors in `pyproject.toml` per #21 
- + Updated dependencies:
+ + updated dependencies:
    + `certifi` (2024.8.30)
    + `charset-normalizer` (3.4.0)
    + `idna` (3.10)

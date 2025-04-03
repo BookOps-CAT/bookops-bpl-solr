@@ -2,7 +2,7 @@ from bookops_bpl_solr import __version__
 
 
 def test_version():
-    assert __version__ == "0.6.0"
+    assert __version__ == "0.6.1"
 
 
 def test_SolrSession_top_import():
