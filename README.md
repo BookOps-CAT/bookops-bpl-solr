@@ -94,6 +94,8 @@ with SolrSession(authorization="your_client_key", endpoint="solr_endpoint") as s
  + updated dependencies:
    + python 3.12
    + pytest (8.3.5)
+   + pytest-cov (6.1.0)
+   + pytest-mock (3.14.0)
    + mypy (1.15)
    + black (25.1.0)
 
