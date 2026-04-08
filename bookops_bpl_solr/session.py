@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 """
 This module provides SolrSession class for requests to BPL Solr platform
 """
