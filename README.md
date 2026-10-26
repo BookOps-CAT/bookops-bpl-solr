@@ -9,7 +9,7 @@ Requires credentials from BPL WebApps.
 
 ## version
 
-> 0.6.1
+> 0.6.2
 
 ## Instalation
 Install via pip:
@@ -87,6 +87,19 @@ with SolrSession(authorization="your_client_key", endpoint="solr_endpoint") as s
 ```
 
 ## Changelog
+### [0.6.2] - 2026-10-26
+#### Added
++ Python 3.15 to unit tests in GitHub actions
+
+#### Changed
++ GitHub actions now uses uv to run unit tests
++ Updated `requests` from 2.32.3 to 2.34.2
++ Updated `types-requests` from 2.32.0.20241016 to 2.33.0.20261006
++ Updated `pytest` from 8.3.5 to 9.1.1
++ Updated `pytest-cov` from 6.1.0 to 7.1.0
+
+#### Removed
++ `black` and `mypy` as dependencies as they are used through VS code extensions
 
 ### [0.6.1] - 2025-04-03
 #### Changed
@@ -220,7 +233,7 @@ with SolrSession(authorization="your_client_key", endpoint="solr_endpoint") as s
 + [Apache Solr Reference Guide](https://lucene.apache.org/solr/guide/8_6/)
 + [pysolr](https://pypi.org/project/pysolr/)
 
-
+[0.6.2]: https://github.com/BookOps-CAT/bookops-bpl-solr/compare/v0.6.1...v0.6.2
 [0.6.1]: https://github.com/BookOps-CAT/bookops-bpl-solr/compare/v0.6.0...v0.6.1
 [0.6.0]: https://github.com/BookOps-CAT/bookops-bpl-solr/compare/v0.5.0...v0.6.0
 [0.5.0]: https://github.com/BookOps-CAT/bookops-bpl-solr/compare/v0.4.0...v0.5.0

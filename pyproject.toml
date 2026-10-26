@@ -1,18 +1,18 @@
 [project]
 name = "bookops-bpl-solr"
-version = "0.6.1"
+version = "0.6.2"
 description = "BookOps Python wrapper around BPL Solr service."
 license = "MIT"
 authors = [{name = "Tomasz Kalata", email = "klingaroo@gmail.com"}, {name = "Charlotte Kostelic", email = "charlottekostelic@bookops.org"}]
 readme = "README.md"
 keywords = ["api", "cataloging", "bibliographic records", "library metadata", "bpl"]
-dependencies = ["requests (>=2.24.0,<3)", "types-requests (>=2.28.0,<3)"]
+dependencies = ["requests>=2.24.0", "types-requests>=2.28.0"]
 requires-python = ">=3.12"
 
 [dependency-groups]
 dev = [
-    "pytest (>=8.3.5,<9)", 
-    "pytest-cov (>=6.1.0,<7)",
+    "pytest>=8.3.5", 
+    "pytest-cov>=6.1.0",
 ]
 
 [tool.poetry.requires-plugins]
